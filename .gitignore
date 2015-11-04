@@ -21,3 +21,5 @@ diff_quality_pylint.html
 
 # IDE
 .idea
+
+var/workbench.log
