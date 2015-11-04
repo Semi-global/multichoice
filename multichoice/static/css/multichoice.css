@@ -1,0 +1,9 @@
+/* CSS for MultiChoiceXBlock */
+
+.multichoice_block .count {
+    font-weight: bold;
+}
+
+.multichoice_block p {
+    cursor: pointer;
+}
