@@ -19,4 +19,15 @@ function MultiChoiceXBlock(runtime, element) {
     $(function ($) {
         /* Here's where you'd do things on page load. */
     });
+
+    $('#crap').click(function () {
+
+        $.ajax({
+            type: "POST",
+            url: runtime.handlerUrl(element, 'xxxinc'),
+            data: JSON.stringify({"doit": 1})
+        });
+
+
+    });
 }

@@ -1,2 +1,1 @@
-pyvirtualdisplay
-paver?
+mako==1.0.3

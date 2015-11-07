@@ -1,5 +1,21 @@
 <div class="multichoice_block">
-<p>MultiChoiceXBlock: count is now xxxxxxxxxxxyyyy xx and so on ... fork test
-    <span class='count' id="count_val">{self.count}</span> <span id="count_btn">(click me to increment)</span>
+<p>MultiChoice: count is now xxxxxxxxxxxyyyy xx and so on ... fork test
+
+    {name}
+    {name2}
+    <span class='count' id="count_val">{xblock.count}</span> <span id="count_btn">(click me to increment)</span>
+    <div>xxx = ${xblock.xxx}</div>
+    <div>num questions = ${xblock.questions.getNumQuestions()}</div>
+    <div>
+        ${xblock.questions.questions}
+    try:
+    % for q in xblock.questions.questions:
+        q: ${q}
+    % endfor
+    </div>
+
+    name: ${name}
+
+    <input type="button" id="crap" value="hoho" />
 </p>
 </div>
