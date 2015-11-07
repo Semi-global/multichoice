@@ -4,7 +4,6 @@ import pkg_resources
 from xblock.core import XBlock
 from xblock.fields import Scope, Integer, String, List, Dict
 from xblock.fragment import Fragment
-from classes.questions import Questions
 
 from mako.template import Template
 from mako.runtime import Context
@@ -68,6 +67,47 @@ class MultiChoiceXBlock(XBlock):
         frag.add_javascript(self.resource_string("static/js/src/multichoice.js"))
         frag.initialize_js('MultiChoiceXBlock')
         return frag
+
+
+    ''' Model methods '''
+
+    def addQuestion(self, question, alternatives):
+
+        if len(question) == 0:
+            return False
+
+        if len(alternatives) == 0:
+            return False
+
+        for alternative in alternatives:
+            if type(alternative) is not Dict:
+                return False
+
+            if get('text') == None:
+                return False
+
+            if len(get('text')) == 0:
+                return False
+
+            if type(get('isCorrect')) != Boolean:
+                return False
+
+        for alternative in alternatives:
+            id = len(self.questions)
+
+
+
+
+
+
+
+
+
+        return True
+
+    ''' JSON handler methods '''
+
+
 
 
     ''' Helper methods '''
