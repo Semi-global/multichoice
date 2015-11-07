@@ -1,6 +1,42 @@
 /* Javascript for MultiChoiceXBlock. */
 function MultiChoiceXBlock(runtime, element) {
 
+    function invoke(method, data, onSuccess)
+    {
+        var handlerUrl = runtime.handlerUrl(element, method);
+
+        $.ajax({
+            type: "POST",
+            url: handlerUrl,
+            data: JSON.stringify(data),
+            success: onSuccess
+        });
+
+        console.log(handlerUrl);
+    }
+
+
+
+    $('#add_question').click(function () {
+
+        invoke('add_question', {'hoho': 'ja'}, function (a, b, c) {
+
+            console.log('got it');
+            console.log(a);
+            console.log(b);
+            console.log(c);
+
+        });
+
+
+    });
+
+
+
+
+
+    /* old */
+
     function updateCount(result) {
         $('.count', element).text(result.count);
     }
