@@ -9,9 +9,13 @@ from mako.template import Template
 from mako.runtime import Context
 from StringIO import StringIO
 
+from questioncontroller import QuestionController
+
 class MultiChoiceXBlock(XBlock):
 
     ''' Studio data '''
+    ''' Use self.questionController.<somemethod/attr> to work with these variables'''
+
     title = String(
         default="", scope=Scope.content,
     )
@@ -54,6 +58,13 @@ class MultiChoiceXBlock(XBlock):
         default=0, scope=Scope.user_state,
     )
 
+    questionInterface = None
+
+    def __init__(self, *args, **kwargs):
+        super(XBlock, self).__init__(*args, **kwargs)
+        self.questionController = QuestionController(self)
+
+    ''' Views '''
 
     def studio_view(self, context=None):
 
@@ -69,53 +80,6 @@ class MultiChoiceXBlock(XBlock):
         return frag
 
 
-    ''' Model methods '''
-
-    def addQuestion(self, question, alternatives):
-
-        if not self.isQuestionValid(question, alternatives):
-            return False
-
-        for alternative in alternatives:
-            if not self.isAlternativeValid(alternative):
-                return False
-
-        question = {
-            'id': len(self.questions),
-            'question': question,
-            'alternatives': alternatives
-        }
-
-        self.questions.append(question)
-
-        return question
-
-    def isQuestionValid(self, question, alternatives):
-
-        if len(question) == 0:
-            return False
-
-        if len(alternatives) == 0:
-            return False
-
-        return True
-
-
-    def isAlternativeValid(self, alternative):
-
-        if type(alternative) is not dict:
-            return False
-
-        if alternative.get('text') == None:
-            return False
-
-        if len(alternative.get('text')) == 0:
-            return False
-
-        if type(alternative.get('isCorrect')) != bool:
-            return False
-
-        return True
 
 
     ''' JSON handler methods '''
@@ -139,7 +103,7 @@ class MultiChoiceXBlock(XBlock):
             'isCorrect': False
         })
 
-        addedQuestion = self.addQuestion(question, answers)
+        addedQuestion = self.questionController.addQuestion(question, answers)
 
         return {'numQuestions': len(self.questions), 'question': addedQuestion}
 
