@@ -68,7 +68,7 @@ class MultiChoiceXBlock(XBlock):
 
     def studio_view(self, context=None):
 
-        tpl = Template(filename="multichoice/multichoice/static/html/studio.html")
+        tpl = Template(filename="multichoice/multichoice/static/html/manage_questions.html")
         buf = StringIO()
         ctx = Context(buf, xblock=self)
         tpl.render_context(ctx)
@@ -83,6 +83,10 @@ class MultiChoiceXBlock(XBlock):
 
 
     ''' JSON handler methods '''
+
+    @XBlock.json_handler
+    def get_questions(self, data, suffix=''):
+        return self.questionController.getQuestions()
 
     @XBlock.json_handler
     def add_question(self, data, suffix=''):

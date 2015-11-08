@@ -11,15 +11,19 @@ function MultiChoiceXBlock(runtime, element) {
             data: JSON.stringify(data),
             success: onSuccess
         });
-
-        console.log(handlerUrl);
     }
+
+    $(document).ready(function () {
+        invoke('get_questions', null, function(data) {
+            populateQuestions(data);
+        });
+    });
 
 
 
     $('#add_question').click(function () {
 
-        invoke('add_question', {'hoho': 'ja'}, function (a, b, c) {
+        invoke('add_question', {'hoho': 'ja'}, function (data) {
 
             console.log('got it');
             console.log(a);
@@ -31,39 +35,20 @@ function MultiChoiceXBlock(runtime, element) {
 
     });
 
+}
 
 
+function populateQuestions(questions) {
 
 
-    /* old */
+    console.log(questions);
 
-    function updateCount(result) {
-        $('.count', element).text(result.count);
+    $ul = $('#multichoice-layout > nav > ul');
+
+    for (key in questions)
+    {
+        $ul.append('<li><div class="multichoice-question">' + questions[key].question + '</div><div class="multichoice-x">x</div><div class="clearfix"></div></li>');
     }
 
-    var handlerUrl = runtime.handlerUrl(element, 'increment_count');
 
-    $('p', element).click(function(eventObject) {
-        $.ajax({
-            type: "POST",
-            url: handlerUrl,
-            data: JSON.stringify({"hello": "world"}),
-            success: updateCount
-        });
-    });
-
-    $(function ($) {
-        /* Here's where you'd do things on page load. */
-    });
-
-    $('#crap').click(function () {
-
-        $.ajax({
-            type: "POST",
-            url: runtime.handlerUrl(element, 'xxxinc'),
-            data: JSON.stringify({"doit": 1})
-        });
-
-
-    });
 }

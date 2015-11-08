@@ -5,14 +5,16 @@ class QuestionController:
     def __init__(self, XBlock):
         self.XBlock = XBlock
 
+    def getQuestions(self):
+        return self.XBlock.questions
 
     def addQuestion(self, question, alternatives):
 
-        if not self.isQuestionValid(question, alternatives):
+        if not self.__isQuestionValid(question, alternatives):
             return False
 
         for alternative in alternatives:
-            if not self.isAlternativeValid(alternative):
+            if not self.__isAlternativeValid(alternative):
                 return False
 
         question = {
@@ -25,7 +27,7 @@ class QuestionController:
 
         return question
 
-    def isQuestionValid(self, question, alternatives):
+    def __isQuestionValid(self, question, alternatives):
 
         if len(question) == 0:
             return False
@@ -36,7 +38,7 @@ class QuestionController:
         return True
 
 
-    def isAlternativeValid(self, alternative):
+    def __isAlternativeValid(self, alternative):
 
         if type(alternative) is not dict:
             return False
