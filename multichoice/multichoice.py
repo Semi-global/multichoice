@@ -79,6 +79,13 @@ class MultiChoiceXBlock(XBlock):
         frag.initialize_js('MultiChoiceXBlock')
         return frag
 
+    def student_view(self, context=None):
+        html = self.resource_string("static/html/student_view.html")
+        frag = Fragment(html.format(self=self))
+        frag.add_css(self.resource_string("static/css/student_view.css"))
+        frag.add_javascript(self.resource_string("static/js/src/student_view.js"))
+        frag.initialize_js('TestXBlock')
+        return frag
 
 
 

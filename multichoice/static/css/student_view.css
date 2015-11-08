@@ -1,0 +1,33 @@
+/*  STUDENT VIEW   */
+
+.multichoice_student #question {
+  display: table;
+  width: 100%;
+}
+
+.multichoice_student .answers {
+  padding: 15px;
+  display: table-cell;
+  width: auto;
+  height: auto;
+}
+.multichoice_student .self-assessment{
+  padding: 15px;
+  display: table-cell;
+  width: 40%;
+  height: auto;
+}
+
+.multicohice_block .legend{
+  display: table-header-group !important;
+}
+
+.multichoice_student .question-checkbox, .multichoice_student .cl-radio {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.multichoice_student .submission {
+    width: auto;
+    margin: 10px 0;
+}
