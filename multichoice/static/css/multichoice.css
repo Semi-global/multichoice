@@ -5,25 +5,25 @@
     display: table;
 }
 
-#multichoice-layout > nav {
+#multichoice-layout nav {
     width: 300px;
     display: table-cell;
 }
 
-#multichoice-layout > .main {
+#multichoice-layout .nav {
     display: table-cell;
     vertical-align: top;
     padding: 0 14px 14px 14px;
 
 }
 
-#multichoice-layout > nav > ul {
+#multichoice-layout nav > ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-#multichoice-layout > nav > ul > li {
+#multichoice-layout nav > ul > li {
     border-top: 1px solid #aaaaaa;
     border-right: 1px solid #aaaaaa;
     border-left: 1px solid #aaaaaa;
@@ -34,12 +34,11 @@
 
 }
 
-#multichoice-layout > nav > ul > li > .multichoice-question {
+#multichoice-layout nav > ul > li > .multichoice-question {
     padding: 14px;
     width: 245px;
     float: left;
 }
-
 
 
 #multichoice-layout .multichoice-x {
@@ -54,15 +53,43 @@
     color: #000000;
 }
 
-
-#multichoice-layout > nav > ul > li:hover {
+#multichoice-layout nav > ul > li:hover {
     background-color: #F5F5F5;
 }
 
 
-#multichoice-layout > nav > ul > li:last-child {
+#multichoice-layout nav > ul > li:last-child {
     border-bottom: 1px solid #aaaaaa;
 }
+
+#multichoice-questionform input[type='submit'] {
+    margin-top: 40px;
+    display: block;
+}
+
+#multichoice-qf-question {
+    padding: 5px;
+    width: 100%;
+    max-width: 1000px;
+}
+
+
+.multichoice-alterntive-input {
+    padding: 5px;
+    width: 90%;
+    max-width: 950px;
+    margin-bottom: 14px;
+}
+
+#multichoice-questionform .fa {
+    font-size: 1.4em;
+    margin-left: 10px;
+}
+
+#multichoice-questionform .multichoice-x {
+    float: none;
+}
+
 
 .clearfix {
     clear: both;

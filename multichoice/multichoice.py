@@ -75,11 +75,10 @@ class MultiChoiceXBlock(XBlock):
 
         frag = Fragment(buf.getvalue())
         frag.add_css(self.resource_string("static/css/multichoice.css"))
-        frag.add_javascript(self.resource_string("static/js/src/multichoice.js"))
+        frag.add_css(self.resource_string("static/css/font-awesome.min.css"))
+        frag.add_javascript(self.resource_string("static/js/src/manage_questions.js"))
         frag.initialize_js('MultiChoiceXBlock')
         return frag
-
-
 
 
     ''' JSON handler methods '''
