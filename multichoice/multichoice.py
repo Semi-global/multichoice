@@ -48,6 +48,18 @@ class MultiChoiceXBlock(XBlock):
         }, scope=Scope.content,
     )
 
+    # just some estimations for usage
+    grade_dictionary = Dict(
+        default={
+            'gradeA': {'grade': 'A', 'score': 90},
+            'gradeB': {'grade': 'B', 'score': 80},
+            'gradeC': {'grade': 'C', 'score': 50},
+            'gradeD': {'grade': 'D', 'score': 40},
+            'gradeE': {'grade': 'E', 'score': 35},
+            'gradeF': {'grade': 'F', 'score': 0},
+        }, scope=Scope.content,
+    )
+
     student_name = "Lars"
     student_id = Integer(
         default=123, scope=Scope.content,

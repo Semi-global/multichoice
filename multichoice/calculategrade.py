@@ -5,7 +5,6 @@ class CalculateGrade:
     __grade = None  # grade achieved
     __xblock = None  # container for the XBlock
     __is_score_calculated = False
-    __gradeArray = ['A', 'B', 'C', 'D', 'E', 'F']  # array for grades
 
     def __init__(self, xblock, total_score):
         """
@@ -32,22 +31,33 @@ class CalculateGrade:
             str: Result text (score and grade)
 
         """
-        self.__calculate_grade()
         grade_text = "Grade: "  # variable for the grade string
         __score_text = "\nYour __score was: "  # variable for the __score string
         return __score_text + str(self.__score) + grade_text + self.__grade
 
     def __calculate_grade(self):
-        """cd
-        Calculates the grade based on the score achieved on this questionnaire
-
-        Returns:
-             str: The grade for this questionnaire
-
         """
+        Calculates the grade based on the score achieved on this questionnaire
+        """
+        score = 0.0
+        grade_dictionary = self.__xblock.grade_dictionary
         if self.__is_score_calculated is False:
-            self.__score = self.__calculate_score()
-
+            score = self.__calculate_score()
+        # calculate the score in percent
+        self.__score = (score / self.__total_score) * 100
+        # get the grade based on the score
+        if self.__score >= grade_dictionary['gradeA']['score']:
+            self.__grade = grade_dictionary['gradeA']['grade']
+        elif self.__score >= grade_dictionary['gradeB']['score']:
+            self.__grade = grade_dictionary['gradeB']['grade']
+        elif self.__score >= grade_dictionary['gradeC']['score']:
+            self.__grade = grade_dictionary['gradeC']['grade']
+        elif self.__score >= grade_dictionary['gradeD']['score']:
+            self.__grade = grade_dictionary['gradeD']['grade']
+        elif self.__score >= grade_dictionary['gradeE']['score']:
+            self.__grade = grade_dictionary['gradeE']['grade']
+        else:
+            self.__grade = grade_dictionary['gradeF']['grade']
 
     def __calculate_score(self):
         """
@@ -70,7 +80,7 @@ class CalculateGrade:
         stud_answer_array = self.__xblock.student_answerArray
         for answer in stud_answer_array:
             confidence_level = self.__get_selected_confidence_level_score(answer.confidenceLevel)
-            if answer.isCorrect is True:
+            if answer.isCorrect:
                 score += confidence_level["correct"]
             else:
                 score += confidence_level["wrong"]
@@ -89,9 +99,9 @@ class CalculateGrade:
         """
         confidence_level_dictionary = self.__xblock.confidenceLevels
         # get and return selected confidence level
-        if selected_confidence_level is "low":
+        if selected_confidence_level in ["low", "Low", "LOW"]:
             return confidence_level_dictionary["low"]
-        elif selected_confidence_level is "normal":
+        elif selected_confidence_level in ["normal", "Normal", "NORMAL"]:
             return confidence_level_dictionary["normal"]
-        elif selected_confidence_level is "high":
+        elif selected_confidence_level in ["high", "High", "HIGH"]:
             return confidence_level_dictionary["high"]
