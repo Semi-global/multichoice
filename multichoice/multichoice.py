@@ -1,6 +1,5 @@
 import pkg_resources
 
-
 from xblock.core import XBlock
 from xblock.fields import Scope, Integer, String, List, Dict
 from xblock.fragment import Fragment
@@ -11,8 +10,8 @@ from StringIO import StringIO
 
 from questioncontroller import QuestionController
 
-class MultiChoiceXBlock(XBlock):
 
+class MultiChoiceXBlock(XBlock):
     ''' Studio data '''
     ''' Use self.questionController.<somemethod/attr> to work with these variables'''
 
@@ -49,6 +48,44 @@ class MultiChoiceXBlock(XBlock):
         }, scope=Scope.content,
     )
 
+    student_name = "Lars"
+    student_id = Integer(
+        default=123, scope=Scope.content,
+    )
+
+    student_answerArray = [1, 1, 2]
+
+    # students = [[001, "Lillian"],[002, "Trym"]]
+
+    students = Dict(
+        default={
+            "Trym": {
+                'id': 001,
+                "lastname": "Hansen"
+            },
+            "Lillian": {
+                id: 002,
+                "lastname": "Marlie"
+            }
+        }
+    )
+
+    students2 = [
+        {
+            "ID": "001",
+            "Firstname": "Trym",
+            "Lastname": "Hansen",
+
+        },
+        {
+            "ID": "002",
+            "Lastname": "Marlie",
+            "Firstname" : "Hella"
+
+        }
+    ]
+
+
     ''' Student data '''
     responses = List(
         default=[], scope=Scope.user_state,
@@ -67,7 +104,6 @@ class MultiChoiceXBlock(XBlock):
     ''' Views '''
 
     def studio_view(self, context=None):
-
         tpl = Template(filename="multichoice/multichoice/static/html/manage_questions.html")
         buf = StringIO()
         ctx = Context(buf, xblock=self)
@@ -80,6 +116,18 @@ class MultiChoiceXBlock(XBlock):
         frag.initialize_js('MultiChoiceXBlock')
         return frag
 
+    def author_view(self, context=None):
+        tpl = Template(filename="multichoice/multichoice/static/html/review_stud_quest.html")
+        buf = StringIO()
+        ctx = Context(buf, xblock=self)
+        tpl.render_context(ctx)
+
+        frag = Fragment(buf.getvalue())
+        frag.add_css(self.resource_string("static/css/multichoice.css"))
+        frag.add_css(self.resource_string("static/css/font-awesome.min.css"))
+        frag.add_javascript(self.resource_string("static/js/src/questionnaire_review.js"))
+        frag.initialize_js('MultiChoiceXBlock')
+        return frag
 
     ''' JSON handler methods '''
 
@@ -89,7 +137,6 @@ class MultiChoiceXBlock(XBlock):
 
     @XBlock.json_handler
     def add_question(self, data, suffix=''):
-
         question = 'Choose A, B or C'
         answers = []
 
@@ -116,7 +163,6 @@ class MultiChoiceXBlock(XBlock):
         """ Handy helper for getting resources from our kit."""
         data = pkg_resources.resource_string(__name__, path)
         return data.decode("utf8")
-
 
     @staticmethod
     def workbench_scenarios():

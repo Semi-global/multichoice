@@ -1,0 +1,51 @@
+<div class="cNavbar">
+    <input type="button" onclick="window.location.href='http://localhost:8000/scenario/multichoice.0/studio_view/';"
+           value="Studio View"/>
+
+    <hr>
+</div>
+<div id="multichoice-layout">
+
+    <h2>Author View</h2>
+
+    <div class="students">
+        ${xblock.student_id}
+
+        <span>StudentID = ${xblock.student_id}</span>
+
+        <br>
+        ${xblock.students2[0]}
+
+        <hr>
+
+        <br>
+        <table>
+            % for student in xblock.students2:
+            <br>
+
+            <tr class="student">
+                % for key, value in student.iteritems():
+                % if key == "ID":
+            <tr id="${value}">${key}:&nbsp;${value}</tr>
+            % else:
+            <tr>${key}:&nbsp;${value}</tr>
+            %endif
+
+            <br>
+
+            % endfor
+
+            </tr>
+
+            % endfor
+        </table>
+    </div>
+
+    <div class="questionnaire-review" style="float:right; margin-right: 25%;">
+        <form>
+            <input type="radio" name="sex" value="male" checked>Male
+            <br>
+            <input type="radio" name="sex" value="female">Female
+        </form>
+    </div>
+</div>
