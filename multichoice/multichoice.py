@@ -75,12 +75,14 @@ class MultiChoiceXBlock(XBlock):
             "ID": "001",
             "Firstname": "Trym",
             "Lastname": "Hansen",
+            "Grade": "B"
 
         },
         {
             "ID": "002",
             "Lastname": "Marlie",
-            "Firstname" : "Hella"
+            "Firstname" : "Hella",
+            "Grade": "D"
 
         }
     ]
