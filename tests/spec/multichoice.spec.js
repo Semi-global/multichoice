@@ -32,7 +32,7 @@ describe('basic test', function () {
         driver.get('http://wingify.com');
 
         driver.takeScreenshot().then(function (png) {
-            var stream = fs.createWriteStream('/tmp/asdf.png');
+            var stream = fs.createWriteStream('/var/lib/jenkins/jobs/Multichoice/workspace/xblock_development/multichoice/tests/images/asdf.png');
             stream.write(new Buffer(png, 'base64'));
             stream.end();
 
@@ -47,7 +47,7 @@ describe('basic test', function () {
             });
 
         driver.takeScreenshot().then(function (png) {
-            var stream = fs.createWriteStream('/tmp/asdf2.png');
+            var stream = fs.createWriteStream('/var/lib/jenkins/jobs/Multichoice/workspace/xblock_development/multichoice/tests/images/asdf2.png');
             stream.write(new Buffer(png, 'base64'));
             stream.end();
 
