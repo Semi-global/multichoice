@@ -23,6 +23,7 @@ install:
 
 test:
 	python manage.py test
+	jasmine-node tests --captureExceptions
 
 cover:
 	coverage run manage.py test
