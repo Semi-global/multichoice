@@ -1,7 +1,12 @@
+_author_ = "Knut Lucas Andersen"
+
+
 class CalculateGrade:
     """
     This class calculates the score for a given questionnaire
-    based on the set confidence level for each answer.
+    based on the set confidence level for each answer. Initialize
+    the class by calling __init__, and then call __unicode__ to
+    display the result.
     """
 
     __score = 0.0  # score achieved
@@ -64,6 +69,7 @@ class CalculateGrade:
             self.__grade = grade_dictionary['gradeE']['grade']
         else:
             self.__grade = grade_dictionary['gradeF']['grade']
+        self.__grade = str(self.__grade)
 
     def __calculate_score(self):
         """
@@ -71,34 +77,36 @@ class CalculateGrade:
 
         This function calculates the score for the questionnaire the student has submitted.
         It loops through all the submitted answers, retrieving both the selected answer and
-        the selected confidence level for this answer. The confidence level is retrieved
-        through the helper function ``get_selected_confidence_level_score``
+        the selected confidence level for this answer. The submitted answers are then compared
+        against the questions belonging to the questionnaire to see which answers are correct
 
         See:
-            ``get_selected_confidence_level_score``
+            | ``__get_selected_confidence_level_score``: Returns the confidence level for the current question
+            | ``__get_current_question``: Returns the question data belonging to the passed question id
+            | ``__check_if_answer_is_correct``: Checks if the submitted answers are the correct ones
 
         Returns:
-            float: The score achieved on this questionnaire
+            float: The total score achieved on this questionnaire
 
         """
-        # TODO: Note that this function will not work with current student_answerArray, see Question in FB group
+
         score = 0.0
         # get the students submitted answers and loop through them
-        student_answer_dictionary = self.__xblock.student_answerArray
+        student_answer_dictionary = self.__xblock.student_answers
         for answer, details in student_answer_dictionary.iteritems():
-            confidence_level = self.__get_selected_confidence_level_score(details['confidenceLevel'])
-            if details["isCorrect"] == 'True':
-                score += confidence_level["correct"]
-            else:
-                score += confidence_level["wrong"]
+            # get question and confidence level
+            question = self.__get_current_question(details['questionId'])
+            confidence_level = self.__get_selected_confidence_level_score(details['confidence'])
+            # check the selected answer(s) for this question and return score
+            score += self.__check_if_answer_is_correct(details['chosen'], question, confidence_level)
         return score
 
     def __get_selected_confidence_level_score(self, selected_confidence_level):
         """
-        Returns a dictionary with score values for the current answer
+        Returns a dictionary with score values for the current answer.
 
         Arguments:
-            selected_confidence_level (str): Confidence level for current answer
+            selected_confidence_level (str): The selected confidence level for this question
 
         Returns:
             dict: Score values for the current answer
@@ -106,9 +114,63 @@ class CalculateGrade:
         """
         confidence_level_dictionary = self.__xblock.confidenceLevels
         # get and return selected confidence level
-        if selected_confidence_level in ["low", "Low", "LOW"]:
-            return confidence_level_dictionary["low"]
-        elif selected_confidence_level in ["normal", "Normal", "NORMAL"]:
-            return confidence_level_dictionary["normal"]
-        elif selected_confidence_level in ["high", "High", "HIGH"]:
-            return confidence_level_dictionary["high"]
+        if selected_confidence_level in ['low', 'Low', 'LOW']:
+            return confidence_level_dictionary['low']
+        elif selected_confidence_level in ['normal', 'Normal', 'NORMAL']:
+            return confidence_level_dictionary['normal']
+        elif selected_confidence_level in ['high', 'High', 'HIGH']:
+            return confidence_level_dictionary['high']
+
+    def __get_current_question(self, question_id):
+        """
+        Returns the question data belonging to the passed question id.
+
+        Arguments
+            question_id (int): The id of the question to retrieve data from
+
+        Returns:
+            dict: Dictionary containing the data for this question id
+
+        """
+        counter = 0
+        question = None
+        question_not_found = True
+        # loop until the question is found, or all questions are checked
+        while question_not_found and counter < len(self.__xblock.questions):
+            if self.__xblock.questions[counter]['id'] == question_id:
+                question = self.__xblock.questions[counter]
+                question_not_found = False
+            counter += 1
+        return question
+
+    @staticmethod
+    def __check_if_answer_is_correct(chosen_answers, question, confidence_level):
+        """
+        Checks if the selected answer(s) on the current question are correct.
+
+        This functions checks the submitted answers to see if they are correct.
+        This is achieved by comparing the selected answers against the answers
+        belonging to the question, to see which one(s) are correct. The score
+        for each answer is based on the selected confidence level for this
+        question.
+
+        Arguments:
+            chosen_answers (dict): The submitted answers for this question
+            question (dict): The question which these answers belong to
+            confidence_level (dict): The selected confidence level for this question
+
+        Returns:
+            float: The total score for this question
+
+        """
+        score = 0.0
+        # loop through the submitted answers and those belonging to the question
+        for current_answer in chosen_answers:
+            for current_alternative in question['alternatives']:
+                # if this is one of the submitted answers, check if it is correct
+                if int(current_alternative['id']) == current_answer:
+                    if current_alternative['isCorrect']:
+                        score += confidence_level['correct']
+                    else:
+                        score += confidence_level['wrong']
+        return score
