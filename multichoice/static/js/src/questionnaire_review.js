@@ -26,6 +26,20 @@ function MultiChoiceXBlock(runtime, element) {
             multichoiceqc.addAlternative('', false, -1);
         });
 
+        $('.student-container').click(function(){
+            console.log("Student clicked");
+            var id = $(this).find('.student-id').attr("id");
+            console.log(id)
+            $('.questionnaire-review').fadeTo('fast', 0.3).fadeTo('fast', 1.0);
+
+            $('.student-container').each(function( index ) {
+                $(this).css("background-color", "white");
+            });
+            $(this).css("background-color", "#fc9a24")
+
+        });
+
+
 
     });
 

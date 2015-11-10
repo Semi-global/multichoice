@@ -7,45 +7,102 @@
 <div id="multichoice-layout">
 
     <h2>Author View</h2>
+    <h4>Review answers</h4>
 
-    <div class="students">
-        ${xblock.student_id}
 
-        <span>StudentID = ${xblock.student_id}</span>
+    ${xblock.student_ans[0]}
 
-        <br>
-        ${xblock.students2[0]}
-
+    <div class="">
         <hr>
-
+        <h4>Choose student to see chosen answers</h4>
         <br>
-        <table>
-            % for student in xblock.students2:
-            <br>
 
-            <tr class="student">
-                % for key, value in student.iteritems():
-                % if key == "ID":
-            <tr id="${value}">${key}:&nbsp;${value}</tr>
+
+        % for student in xblock.students:
+        <div class="student-container">
+
+            % for key, value in student.iteritems():
+
+            % if key == "ID":
+            <span class="student-id" id="${value}">${key}: 00${value}</span>
             % else:
-            <tr>${key}:&nbsp;${value}</tr>
-            %endif
+            <span>${key}: ${value}</span>
+            % endif
 
             <br>
 
             % endfor
 
-            </tr>
 
-            % endfor
-        </table>
+        </div>
+        % endfor
+
     </div>
+
+    <br>
+    <br>
 
     <div class="questionnaire-review" style="float:right; margin-right: 25%;">
-        <form>
-            <input type="radio" name="sex" value="male" checked>Male
+        <h5>When Norway and Denmark was an union what was it called?</h5>
+
+        <div class="question-container-1">
+            <input type="radio" name="answer" value="den-nor">Denmark-Norway
             <br>
-            <input type="radio" name="sex" value="female">Female
-        </form>
+            <input type="radio" name="answer" value="pancake">Pancake
+            <br>
+            <input type="radio" name="answer" value="sweden">Sweden
+        </div>
+        <br>
+        <h5>What was the name of the danish king that was in the Napoleon wars</h5>
+
+        <div class="question-container-2">
+            <form>
+                <input type="radio" name="answer" value="fredrik6">Frederik 6.
+                <br>
+                <input type="radio" name="answer" value="trymj">Trym Jensen
+                <br>
+                <input type="radio" name="answer" value="kongk">Kong Kloe 1.
+            </form>
+        </div>
+        <br>
+        <h5>How many men was on the meeting on Eidsvol?</h5>
+
+        <div class="question-container-3">
+            <form>
+                <input type="radio" name="answer" value="112">112 men was there
+                <br>
+                <input type="radio" name="answer" value="0">None
+                <br>
+                <input type="radio" name="answer" value="1">One
+            </form>
+        </div>
+        <br>
+        <h5>How old was the men that was on Eidsvol?</h5>
+
+        <div class="question-container-4">
+            <form>
+                <input type="radio" name="answer" value="42">The men was over 42 years old
+                <br>
+                <input type="radio" name="answer" value="6">About 6-10 years old
+                <br>
+                <input type="radio" name="answer" value="toddlers">Barely toddlers
+            </form>
+        </div>
+        <br>
+        <h5>What wanted the danish-party for Norway?</h5>
+
+        <div class="question-container-5">
+            <form>
+                <input type="radio" name="answer" value="independent">They wanted a independent Norway
+                <br>
+                <input type="radio" name="answer" value="taxes">To have less taxes
+                <br>
+                <input type="radio" name="answer" value="parties">More dance parties
+            </form>
+        </div>
+
+
     </div>
+
+</div>
 </div>

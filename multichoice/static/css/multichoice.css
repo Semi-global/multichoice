@@ -94,3 +94,17 @@
 .clearfix {
     clear: both;
 }
+
+/*------------Questionnaire review---------------*/
+
+.student-container{
+    width: 35%;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    margin: 5px;
+}
+
+.student-container:hover{
+    border: 1px solid;
+    cursor:pointer;
+}

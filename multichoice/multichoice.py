@@ -67,38 +67,23 @@ class MultiChoiceXBlock(XBlock):
 
     student_answerArray = [1, 1, 2]
 
-    # students = [[001, "Lillian"],[002, "Trym"]]
 
-    students = Dict(
-        default={
-            "Trym": {
-                'id': 001,
-                "lastname": "Hansen"
-            },
-            "Lillian": {
-                id: 002,
-                "lastname": "Marlie"
-            }
-        }
-    )
-
-    students2 = [
+    students = [
         {
-            "ID": "001",
+            "ID": "1",
             "Firstname": "Trym",
             "Lastname": "Hansen",
             "Grade": "B"
-
         },
         {
-            "ID": "002",
+            "ID": "2",
             "Lastname": "Marlie",
             "Firstname" : "Hella",
             "Grade": "D"
-
         }
     ]
 
+    student_ans = [[1,1,1,1], [2,2,2,2]]
 
     ''' Student data '''
     responses = List(
