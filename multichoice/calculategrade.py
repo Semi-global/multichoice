@@ -1,4 +1,8 @@
 class CalculateGrade:
+    """
+    This class calculates the score for a given questionnaire
+    based on the set confidence level for each answer.
+    """
 
     __score = 0.0  # score achieved
     __total_score = 0.0  # total score for this questionnaire
@@ -31,9 +35,11 @@ class CalculateGrade:
             str: Result text (score and grade)
 
         """
-        grade_text = "Grade: "  # variable for the grade string
-        __score_text = "\nYour __score was: "  # variable for the __score string
-        return __score_text + str(self.__score) + grade_text + self.__grade
+        # variable for the grade string
+        grade_text = "\nGrade: " + self.__grade
+        # variable for the __score string
+        __score_text = "Your score was: " + str(self.__score) + "%."
+        return __score_text + grade_text
 
     def __calculate_grade(self):
         """
@@ -75,12 +81,13 @@ class CalculateGrade:
             float: The score achieved on this questionnaire
 
         """
+        # TODO: Note that this function will not work with current student_answerArray, see Question in FB group
         score = 0.0
         # get the students submitted answers and loop through them
-        stud_answer_array = self.__xblock.student_answerArray
-        for answer in stud_answer_array:
-            confidence_level = self.__get_selected_confidence_level_score(answer.confidenceLevel)
-            if answer.isCorrect:
+        student_answer_dictionary = self.__xblock.student_answerArray
+        for answer, details in student_answer_dictionary.iteritems():
+            confidence_level = self.__get_selected_confidence_level_score(details['confidenceLevel'])
+            if details["isCorrect"] == 'True':
                 score += confidence_level["correct"]
             else:
                 score += confidence_level["wrong"]
