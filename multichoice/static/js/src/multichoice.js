@@ -14,9 +14,9 @@ function MultiChoiceXBlock(runtime, element) {
     }
 
     $(document).ready(function () {
-        invoke('get_questions', null, function(data) {
-            populateQuestions(data);
-        });
+        //invoke('get_questions', null, function(data) {
+        //    populateQuestions(data);
+        //});
     });
 
 

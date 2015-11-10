@@ -1,21 +1,24 @@
 <div class="multichoice_student">
-    <fieldset id="question">
-        <legend>Question 1</legend>
+    % for question in xblock.questions:
+    <fieldset class="question" id="${question['id']}">
+        <legend>${question['question']}</legend>
         <div class="answers">
-            <input class="question-checkbox" type="checkbox" id="A1" name="answer" value="1"/><label for="A1">First</label><br/>
-            <input class="question-checkbox" type="checkbox" id="A2" name="answer" value="2"/><label for="A2">Second</label><br/>
-            <input class="question-checkbox" type="checkbox" id="A3" name="answer" value="3"/><label for="A3">Third</label><br/>
-            <input class="question-checkbox" type="checkbox" id="A4" name="answer" value="4"/><label for="A4">Third</label><br/>
-            <input class="question-checkbox" type="checkbox" id="A5" name="answer" value="5"/><label for="A5">Third</label><br/>
+            % for alternative in question['alternatives']:
+            <i class="fa fa-check" id="q${question['id']}-check-${alternative['id']}"></i>
+            <i class="fa fa-times" id="q${question['id']}-times-${alternative['id']}"></i>
+            <input class="question-checkbox" type="checkbox" id="A${alternative['id']}" name="answer-${question['id']}" value="${alternative['id']}"/>
+            <label for="A${alternative['id']}">${alternative['text']}</label><br/>
+            % endfor
         </div>
         <div class="self-assessment">
             <p>How confident are you about your answer?</p>
-            <input class="cl-radio" type="radio" name="confidence-level" id="CL-0" value="0"/><label for="CL-0">I'm certain</label><br/>
-            <input class="cl-radio" type="radio" name="confidence-level" id="CL-1" value="1"/><label for="CL-1">Somewhat confident</label><br/>
-            <input class="cl-radio" type="radio" name="confidence-level" id="CL-2" value="2"/><label for="CL-2">Not confident</label><br/>
+            <input class="cl-radio" type="radio" name="confidence-level-${question['id']}" id="CL-0" value="Low"/><label for="CL-0">Not confident</label><br/>
+            <input class="cl-radio" type="radio" name="confidence-level-${question['id']}" id="CL-1" value="Normal"/><label for="CL-1">Somewhat confident</label><br/>
+            <input class="cl-radio" type="radio" name="confidence-level-${question['id']}" id="CL-2" value="High"/><label for="CL-2">I'm certain</label><br/>
         </div>
         <div class="submission">
-            <button type="submit" value="submit" class="submit-button">Check</button>
+            <button type="submit" value="submit" class="submit-button" id="submit-question-${question['id']}">Check</button>
         </div>
     </fieldset>
+    % endfor
 </div>

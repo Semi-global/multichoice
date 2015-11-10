@@ -1,8 +1,9 @@
 /*  STUDENT VIEW   */
 
-.multichoice_student #question {
+.multichoice_student .question {
   display: table;
   width: 100%;
+  margin-bottom: 15px;
 }
 
 .multichoice_student .answers {
@@ -11,6 +12,19 @@
   width: auto;
   height: auto;
 }
+
+.multichoice_student .answers .fa {
+  display: none;
+}
+
+.multichoice_student .answers .fa-check {
+  color: #23882d;
+}
+
+.multichoice_student .answers .fa-times {
+  color: #882513;
+}
+
 .multichoice_student .self-assessment{
   padding: 15px;
   display: table-cell;
