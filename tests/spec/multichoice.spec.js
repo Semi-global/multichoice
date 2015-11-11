@@ -60,6 +60,20 @@ describe('basic test', function () {
             stream.end();
         });
 
+        driver.get('http://edx.akre.biz:8000/scenario/multichoice.0/studio_view');
+
+        var e = driver.findElement(webdriver.By.css('.title'));
+        e.getInnerHtml().then(function(html) {
+            expect(html).toBe('XBlock: MultiChoiceXBlock');
+            done();
+        });
+
+        driver.takeScreenshot().then(function (png) {
+            var stream = fs.createWriteStream('tests/images/03-studio-view.png');
+            stream.write(new Buffer(png, 'base64'));
+            stream.end();
+        });
+
 
 
 /*
