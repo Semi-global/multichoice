@@ -2,11 +2,48 @@ class QuestionController:
 
     XBlock = None
 
+    questions = [
+        {
+            'id': 1,
+            'question': 'Choose A, B or C',
+            'alternatives': [{
+                'id': '1',
+                'text': 'A',
+                'isCorrect': True
+            }, {
+                'id': '2',
+                'text': 'B',
+                'isCorrect': False
+            }, {
+                'id': '3',
+                'text': 'C',
+                'isCorrect': False
+            }]
+        },
+        {
+            'id': 2,
+            'question': 'Choose D, E or F',
+            'alternatives': [{
+                'id': '1',
+                'text': 'D',
+                'isCorrect': True
+            }, {
+                'id': '2',
+                'text': 'E',
+                'isCorrect': False
+            }, {
+                'id': '3',
+                'text': 'F',
+                'isCorrect': False
+            }]
+        }
+    ]
+
     def __init__(self, XBlock):
         self.XBlock = XBlock
 
     def getQuestions(self):
-        return self.XBlock.questions
+        return self.questions
 
     def addQuestion(self, question, alternatives):
 

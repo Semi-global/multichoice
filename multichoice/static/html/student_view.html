@@ -3,7 +3,7 @@
     <input type="button" onclick="window.location.href='http://localhost:8000/scenario/multichoice.0/studio_view/';"
            value="Studio View"/>
 
-    % for question in xblock.questions:
+    % for question in xblock.get_questions_prop:
     <fieldset class="question" id="${question['id']}">
         <legend>${question['question']}</legend>
         <div class="answers">

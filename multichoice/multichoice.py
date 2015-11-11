@@ -23,46 +23,9 @@ class MultiChoiceXBlock(XBlock):
         default="", scope=Scope.content,
     )
 
-    # questions = List(
-    #     default=[], scope=Scope.content,
-    # )
-
-    questions = [
-        {
-            'id': 1,
-            'question': 'Choose A, B or C',
-            'alternatives': [{
-                'id': '1',
-                'text': 'A',
-                'isCorrect': True
-            }, {
-                'id': '2',
-                'text': 'B',
-                'isCorrect': False
-            }, {
-                'id': '3',
-                'text': 'C',
-                'isCorrect': False
-            }]
-        },
-        {
-            'id': 2,
-            'question': 'Choose D, E or F',
-            'alternatives': [{
-                'id': '1',
-                'text': 'D',
-                'isCorrect': True
-            }, {
-                'id': '2',
-                'text': 'E',
-                'isCorrect': False
-            }, {
-                'id': '3',
-                'text': 'F',
-                'isCorrect': False
-            }]
-        }
-    ]
+    questions = List(
+        default=[], scope=Scope.content,
+    )
 
     maxScore = Integer(
         default=0, scope=Scope.content,
@@ -134,6 +97,10 @@ class MultiChoiceXBlock(XBlock):
     def __init__(self, *args, **kwargs):
         super(XBlock, self).__init__(*args, **kwargs)
         self.questionController = QuestionController(self)
+
+    @property
+    def get_questions_prop(self):
+        return self.questionController.getQuestions()
 
     ''' Views '''
 
@@ -247,7 +214,7 @@ class MultiChoiceXBlock(XBlock):
         Returns:
             bool: correctness value for a particular answer.
         """
-        for question in self.questions:
+        for question in self.get_questions_prop:
             for alternative in question['alternatives']:
                 if alternative['id'] == answer_id:
                     return alternative['isCorrect']
