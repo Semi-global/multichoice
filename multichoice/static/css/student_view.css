@@ -1,0 +1,47 @@
+/*  STUDENT VIEW   */
+
+.multichoice_student .question {
+  display: table;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.multichoice_student .answers {
+  padding: 15px;
+  display: table-cell;
+  width: auto;
+  height: auto;
+}
+
+.multichoice_student .answers .fa {
+  display: none;
+}
+
+.multichoice_student .answers .fa-check {
+  color: #23882d;
+}
+
+.multichoice_student .answers .fa-times {
+  color: #882513;
+}
+
+.multichoice_student .self-assessment{
+  padding: 15px;
+  display: table-cell;
+  width: 40%;
+  height: auto;
+}
+
+.multicohice_block .legend{
+  display: table-header-group !important;
+}
+
+.multichoice_student .question-checkbox, .multichoice_student .cl-radio {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.multichoice_student .submission {
+    width: auto;
+    margin: 10px 0;
+}

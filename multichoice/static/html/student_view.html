@@ -1,0 +1,24 @@
+<div class="multichoice_student">
+    % for question in xblock.questions:
+    <fieldset class="question" id="${question['id']}">
+        <legend>${question['question']}</legend>
+        <div class="answers">
+            % for alternative in question['alternatives']:
+            <i class="fa fa-check" id="q${question['id']}-check-${alternative['id']}"></i>
+            <i class="fa fa-times" id="q${question['id']}-times-${alternative['id']}"></i>
+            <input class="question-checkbox" type="checkbox" id="A${alternative['id']}" name="answer-${question['id']}" value="${alternative['id']}"/>
+            <label for="A${alternative['id']}">${alternative['text']}</label><br/>
+            % endfor
+        </div>
+        <div class="self-assessment">
+            <p>How confident are you about your answer?</p>
+            <input class="cl-radio" type="radio" name="confidence-level-${question['id']}" id="CL-0" value="Low"/><label for="CL-0">Not confident</label><br/>
+            <input class="cl-radio" type="radio" name="confidence-level-${question['id']}" id="CL-1" value="Normal"/><label for="CL-1">Somewhat confident</label><br/>
+            <input class="cl-radio" type="radio" name="confidence-level-${question['id']}" id="CL-2" value="High"/><label for="CL-2">I'm certain</label><br/>
+        </div>
+        <div class="submission">
+            <button type="submit" value="submit" class="submit-button" id="submit-question-${question['id']}">Check</button>
+        </div>
+    </fieldset>
+    % endfor
+</div>

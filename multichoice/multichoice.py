@@ -23,9 +23,46 @@ class MultiChoiceXBlock(XBlock):
         default="", scope=Scope.content,
     )
 
-    questions = List(
-        default=[], scope=Scope.content,
-    )
+    # questions = List(
+    #     default=[], scope=Scope.content,
+    # )
+
+    questions = [
+        {
+            'id': 1,
+            'question': 'Choose A, B or C',
+            'alternatives': [{
+                'id': '1',
+                'text': 'A',
+                'isCorrect': True
+            }, {
+                'id': '2',
+                'text': 'B',
+                'isCorrect': False
+            }, {
+                'id': '3',
+                'text': 'C',
+                'isCorrect': False
+            }]
+        },
+        {
+            'id': 2,
+            'question': 'Choose D, E or F',
+            'alternatives': [{
+                'id': '1',
+                'text': 'D',
+                'isCorrect': True
+            }, {
+                'id': '2',
+                'text': 'E',
+                'isCorrect': False
+            }, {
+                'id': '3',
+                'text': 'F',
+                'isCorrect': False
+            }]
+        }
+    ]
 
     maxScore = Integer(
         default=0, scope=Scope.content,
@@ -86,7 +123,7 @@ class MultiChoiceXBlock(XBlock):
     student_ans = [[1,1,1,1], [2,2,2,2]]
 
     ''' Student data '''
-    responses = List(
+    student_answers = List(
         default=[], scope=Scope.user_state,
     )
 
@@ -115,6 +152,18 @@ class MultiChoiceXBlock(XBlock):
         frag.initialize_js('MultiChoiceXBlock')
         return frag
 
+    def student_view(self, context=None):
+        tpl = Template(filename="multichoice/multichoice/static/html/student_view.html")
+        buf = StringIO()
+        ctx = Context(buf, xblock=self)
+        tpl.render_context(ctx)
+
+        frag = Fragment(buf.getvalue())
+        frag.add_css(self.resource_string("static/css/student_view.css"))
+        frag.add_javascript(self.resource_string("static/js/src/student_view.js"))
+        frag.initialize_js('AnswerXBlock')
+        return frag
+
     def author_view(self, context=None):
         tpl = Template(filename="multichoice/multichoice/static/html/review_stud_quest.html")
         buf = StringIO()
@@ -129,6 +178,18 @@ class MultiChoiceXBlock(XBlock):
         return frag
 
     ''' JSON handler methods '''
+
+    @XBlock.json_handler
+    def save_student_answers(self, data, suffix=''):
+        self.student_answers = data
+        return_data = {}
+        for answer_id in self.student_answers['chosen']:
+            if self._is_answer_correct(answer_id):
+                return_data[answer_id] = 'true'
+            else:
+                return_data[answer_id] = 'false'
+
+        return return_data
 
     @XBlock.json_handler
     def get_questions(self, data, suffix=''):
@@ -157,8 +218,14 @@ class MultiChoiceXBlock(XBlock):
         return {'numQuestions': len(self.questions), 'question': addedQuestion}
 
     ''' Helper methods '''
+    def _is_answer_correct(self, answer_id):
+        for question in self.questions:
+            for alternative in question['alternatives']:
+                if alternative['id'] == answer_id:
+                    return alternative['isCorrect']
 
-    def resource_string(self, path):
+    @staticmethod
+    def resource_string(path):
         """ Handy helper for getting resources from our kit."""
         data = pkg_resources.resource_string(__name__, path)
         return data.decode("utf8")
