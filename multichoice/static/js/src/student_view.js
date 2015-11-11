@@ -15,8 +15,8 @@ function AnswerXBlock(runtime, element){
                    choices.push($(this).attr('value'))
                 });
                 var cl_value = $CL.attr('value');
-                answers[questionId] = {'chosen': choices, 'confidence': cl_value};
-                //console.log(answers);
+                answers['question'+questionId] = {'questionId': questionId, 'chosen': choices, 'confidence': cl_value};
+                console.log(answers['question1']);
                 invoke('save_student_answers', answers, function(data){
                     console.log(data);
                     $submitButton.attr('disabled', 'disabled');
@@ -44,7 +44,7 @@ function AnswerXBlock(runtime, element){
 
     $('#submit-all-questions').click(function(){
         if(questionAmount > 0){
-           invoke('get_grade', questionAmount, function(data) {
+           invoke('get_grade', {'amount': questionAmount}, function(data) {
                $('#grade > p').append(data['grade']);
                $('#grade').show(0);
            })
