@@ -174,21 +174,21 @@ class CalculateGrade:
                     else:
                         score += confidence_level['wrong']
         return score
-		
-	def get_score(self):
-		"""
-		Returns the score achieved for this questionnaire
-		
-		Returns:
-			float: Score achieved
-		"""
-		return self.__score
-		
-	def get_grade(self):
-		"""
-		Returns the grade achieved on this questionnaire
-		
-		Returns:
-			str: Grade achieved
-		"""
-		return self.__grade
+
+    def get_score(self):
+        """
+        Returns the score achieved for this questionnaire
+
+        Returns:
+            float: Score achieved
+        """
+        return self.__score
+
+    def get_grade(self):
+        """
+        Returns the grade achieved on this questionnaire
+
+        Returns:
+            str: Grade achieved
+        """
+        return self.__grade
