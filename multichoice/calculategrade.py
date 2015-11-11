@@ -14,23 +14,22 @@ class CalculateGrade:
     __grade = None  # grade achieved
     __xblock = None  # container for the XBlock
     __is_score_calculated = False
+    __question_dictionary = None  # container for the questions asked
 
-    def __init__(self, xblock, total_score):
+    def __init__(self, xblock, total_score, question_dictionary):
         """
-        Class constructor for score and grade calculation
-
-        Initializes the class by setting variable values and calculating
-        the students score and grade on the currently submitted questionnaire.
+        Class constructor that initializes objects
 
         Arguments:
              xblock (XBlock): Object of the parent XBlock class
             total_score (float): Score/points needed to achieve 100%
+            question_dictionary (dict): Dictionary containing this questionnaires questions
 
         """
         self.__xblock = xblock
         self.__total_score = total_score
         self.__is_score_calculated = False
-        self.__calculate_grade()
+        self.__question_dictionary = question_dictionary
 
     def __unicode__(self):
         """
@@ -40,6 +39,7 @@ class CalculateGrade:
             str: Result text (score and grade)
 
         """
+        self.__calculate_grade()
         # variable for the grade string
         grade_text = "\nGrade: " + self.__grade
         # variable for the __score string
@@ -56,6 +56,9 @@ class CalculateGrade:
             score = self.__calculate_score()
         # calculate the score in percent
         self.__score = (score / self.__total_score) * 100
+        # due to confidence level, ensure that score cannot be higher then 100%
+        if self.__score > 100:
+            self.__score = 100
         # get the grade based on the score
         if self.__score >= grade_dictionary['gradeA']['score']:
             self.__grade = grade_dictionary['gradeA']['grade']
@@ -89,16 +92,15 @@ class CalculateGrade:
             float: The total score achieved on this questionnaire
 
         """
-
         score = 0.0
-        # get the students submitted answers and loop through them
-        student_answer_dictionary = self.__xblock.student_answers
+        student_answer_dictionary = self.__xblock.student_answer_dictionary
         for answer, details in student_answer_dictionary.iteritems():
             # get question and confidence level
             question = self.__get_current_question(details['questionId'])
             confidence_level = self.__get_selected_confidence_level_score(details['confidence'])
             # check the selected answer(s) for this question and return score
             score += self.__check_if_answer_is_correct(details['chosen'], question, confidence_level)
+        self.__is_score_calculated = True
         return score
 
     def __get_selected_confidence_level_score(self, selected_confidence_level):
@@ -135,10 +137,11 @@ class CalculateGrade:
         counter = 0
         question = None
         question_not_found = True
+        question_dictionary = self.__question_dictionary
         # loop until the question is found, or all questions are checked
-        while question_not_found and counter < len(self.__xblock.questions):
-            if self.__xblock.questions[counter]['id'] == question_id:
-                question = self.__xblock.questions[counter]
+        while question_not_found and counter < len(question_dictionary):
+            if question_dictionary[counter]['id'] == question_id:
+                question = question_dictionary[counter]
                 question_not_found = False
             counter += 1
         return question
@@ -181,6 +184,7 @@ class CalculateGrade:
 
         Returns:
             float: Score achieved
+
         """
         return self.__score
 
@@ -190,5 +194,67 @@ class CalculateGrade:
 
         Returns:
             str: Grade achieved
+
         """
         return self.__grade
+
+    def check_if_dictionaries_is_set(self):
+        """
+        Checks if the dictionaries used have content (for debugging purposes)
+
+        Returns:
+             str: String stating whether or not the given dictionaries have content
+
+        """
+        # get the dictionaries
+        questions_dictionary = self.__question_dictionary
+        student_answers_dictionary = self.__xblock.student_answer_dictionary
+        grade_dictionary = self.__xblock.grade_dictionary
+        confidence_level_dictionary = self.__xblock.confidenceLevels
+        # get and return the result
+        result = self.__check_status_of_dictionary("Questions", questions_dictionary)
+        result += self.__check_status_of_dictionary("SubmittedAnswers", student_answers_dictionary)
+        result += self.__check_status_of_dictionary("Grades", grade_dictionary)
+        result += self.__check_status_of_dictionary("Confidence Level", confidence_level_dictionary)
+        return result
+
+    def __check_status_of_dictionary(self, name, dictionary):
+        """
+        Checks if the passed dictionary is None (empty) or has content (for debugging purposes).
+
+        Arguments:
+            name (str): The name of this dictionary (for text output)
+            dictionary (dict): The dictionary to check
+
+        Returns:
+             str: String informing whether or not the dictionary has content
+
+        """
+        result = self.__check_if_dictionary_has_content(dictionary)
+        # check content of passed dictionary
+        if result is None:
+            status = "Dictionary (" + name + ") is None."
+        else:
+            status = "Dictionary (" + name + ") " + str(result)
+        return status
+
+    @staticmethod
+    def __check_if_dictionary_has_content(dictionary):
+        """
+        Checks if the passed dictionary has content or if it is None.
+        The function either returns None (if dictionary is empty) or
+        a string with the content and the length of the dictionary.
+        (for debugging purposes)
+
+        Arguments:
+            dictionary (dict): Dictionary to check
+
+        Returns:
+            object: None || String (str)
+
+        """
+        content = None
+        if dictionary is not None:
+            content = "Content: " + str(dictionary) + " \nLength: " + str(len(dictionary))
+        return content
+

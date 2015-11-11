@@ -95,6 +95,22 @@ class MultiChoiceXBlock(XBlock):
 
     questionInterface = None
 
+    # TODO: Remove this after setup has been updated.
+    # TODO: The class CalculateGrade requires this format to function.
+    # TODO: Do not remove until after demo (or until the original has been updated)
+    student_answer_dictionary = {
+        'question1': {
+            'questionId': 1,
+            'chosen': [2, 3],
+            'confidence': 'Low'
+        },
+        'question2': {
+            'questionId': 2,
+            'chosen': [1, 2],
+            'confidence': 'High'
+        }
+    }
+
     def __init__(self, *args, **kwargs):
         super(XBlock, self).__init__(*args, **kwargs)
         self.questionController = QuestionController(self)
@@ -180,7 +196,38 @@ class MultiChoiceXBlock(XBlock):
 
     @XBlock.json_handler
     def get_grade(self, data, suffix=''):
-        grade = CalculateGrade(self.runtime, data['amount']).__unicode__()
+        """
+        Retrieves the score and grade for the questionnaire based
+        on the students submitted answers. This achieved by calling
+        the class ``CalculateGrade`` and the function ``__unicode__``
+        which returns a string with the score and grade.
+
+        Arguments:
+            data:
+            suffix:
+
+        See:
+            ``CalculateGrade.__unicode__``
+
+        Returns:
+            object: JSON object containing the string with the score and grade
+
+        """
+        grade = ''
+        try:
+            # get the dictionary containing the questions and set the total score
+            question_dictionary = self.questionController.getQuestions()
+            total_score = len(question_dictionary)
+            # create an object of the class that calculates the grade
+            calc_grade = CalculateGrade(self, total_score, question_dictionary)
+            # This is for debugging, in case it does not work
+            # (checks if dictionaries has content)
+            # grade = calc_grade.check_if_dictionaries_is_set()
+            # print the grade
+            grade = calc_grade.__unicode__()
+        except Exception, ex:
+                grade += "<p>An exception occurred: " + str(ex) + ". "
+                grade += "Failed at calculating grade."
         return {'grade': grade}
 
     @XBlock.json_handler
