@@ -22,8 +22,10 @@ stream = require('stream');
  });
 
  afterEach(function () {
-    driver.quit();
+     //driver.quit();
  });
+
+
 
 
 describe('basic test', function () {
@@ -31,13 +33,14 @@ describe('basic test', function () {
 
         driver.get('http://edx.akre.biz:8000/');
 
-        driver.getTitle().then(function(title) {
-            expect(title).toBe('XBlock scenarios');
+        var e = driver.findElement(webdriver.By.css('.title'));
+        e.getInnerHtml().then(function(html) {
+            expect(html).toBe('XBlock scenarios');
             done();
         });
 
         driver.takeScreenshot().then(function (png) {
-            var stream = fs.createWriteStream('/var/lib/jenkins/jobs/Multichoice/workspace/xblock_development/multichoice/tests/images/01-xblock-menu.png');
+            var stream = fs.createWriteStream('tests/images/01-xblock-menu.png');
             stream.write(new Buffer(png, 'base64'));
             stream.end();
 
@@ -45,13 +48,14 @@ describe('basic test', function () {
 
         driver.get('http://edx.akre.biz:8000/scenario/multichoice.0/student_view');
 
-        driver.getTitle().then(function(title) {
-            expect(title).toBe('XBlock: MultiChoiceXBlock');
+        var e = driver.findElement(webdriver.By.css('.title'));
+        e.getInnerHtml().then(function(html) {
+            expect(html).toBe('XBlock: MultiChoiceXBlock');
             done();
         });
 
         driver.takeScreenshot().then(function (png) {
-            var stream = fs.createWriteStream('/var/lib/jenkins/jobs/Multichoice/workspace/xblock_development/multichoice/tests/images/02-student-view.png');
+            var stream = fs.createWriteStream('tests/images/02-student-view.png');
             stream.write(new Buffer(png, 'base64'));
             stream.end();
         });
@@ -81,5 +85,7 @@ describe('basic test', function () {
 
 
 	}, 60*1000);
+
+
 });
 
