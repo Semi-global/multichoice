@@ -80,6 +80,6 @@ describe('basic test', function () {
 
 
 
-	}, 10000);
+	}, 60*1000);
 });
 
