@@ -1,6 +1,8 @@
 function AnswerXBlock(runtime, element){
 
-    $('.submit-button').click(function (){
+    window.questionAmount = 0;
+
+    $('.submission > button').click(function (){
         var choices = [];
         var answers = {};
         var questionId = $(this).closest('fieldset').attr('id');
@@ -18,6 +20,8 @@ function AnswerXBlock(runtime, element){
                 invoke('save_student_answers', answers, function(data){
                     console.log(data);
                     $submitButton.attr('disabled', 'disabled');
+                    questionAmount++;
+                    console.log(questionAmount);
                     for (key in data) {
                         var $correct = $('#q' + questionId + '-check-' + key);
                         var $wrong = $('#q' + questionId + '-times-' + key);
@@ -35,6 +39,18 @@ function AnswerXBlock(runtime, element){
         }
         else {
             alert('Make your choice')
+        }
+    });
+
+    $('#submit-all-questions').click(function(){
+        if(questionAmount > 0){
+           invoke('get_grade', questionAmount, function(data) {
+               $('#grade > p').append(data['grade']);
+               $('#grade').show(0);
+           })
+        }
+        else {
+            alert('You have to answer at least one question');
         }
     });
 

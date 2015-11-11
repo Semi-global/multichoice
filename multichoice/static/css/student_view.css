@@ -45,3 +45,15 @@
     width: auto;
     margin: 10px 0;
 }
+
+.multichoice_student #grade{
+    border: 2px solid #008000;
+    background-color: rgba(0,128,0,0.5);
+    width: auto;
+    margin-bottom: 10px;
+    display: none;
+}
+
+.multichoice_student #grade p{
+    padding: 10px;
+}

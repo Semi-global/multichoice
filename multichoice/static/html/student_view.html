@@ -3,6 +3,10 @@
     <input type="button" onclick="window.location.href='../multichoice.0/studio_view/';"
            value="Studio View"/>
 
+    <div id="grade">
+        <p></p>
+    </div>
+
     % for question in xblock.get_questions_prop:
     <fieldset class="question" id="${question['id']}">
         <legend>${question['question']}</legend>
@@ -25,4 +29,5 @@
         </div>
     </fieldset>
     % endfor
+    <button type="submit" value="submit" class="submit-button" id="submit-all-questions">Get Grade</button>
 </div>
