@@ -6,7 +6,7 @@ function AnswerXBlock(runtime, element){
         var questionId = $(this).closest('fieldset').attr('id');
         var $CL = $('input[name=confidence-level-' + questionId + ']:checked');
         var $chosen = $('input[name=answer-' + questionId + ']:checked');
-        var $submtiButton = $('#submit-question-' + questionId);
+        var $submitButton = $('#submit-question-' + questionId);
         if($chosen.length > 0) {
             if($CL.length > 0) {
                 $chosen.each(function () {
@@ -17,7 +17,7 @@ function AnswerXBlock(runtime, element){
                 //console.log(answers);
                 invoke('save_student_answers', answers, function(data){
                     console.log(data);
-                    $submtiButton.attr('disabled', 'disabled');
+                    $submitButton.attr('disabled', 'disabled');
                     for (key in data) {
                         var $correct = $('#q' + questionId + '-check-' + key);
                         var $wrong = $('#q' + questionId + '-times-' + key);
