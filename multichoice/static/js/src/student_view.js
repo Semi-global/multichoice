@@ -2,6 +2,7 @@ function AnswerXBlock(runtime, element){
 
     $('.submit-button').click(function (){
         var choices = [];
+        var answers = {};
         var questionId = $(this).closest('fieldset').attr('id');
         var $CL = $('input[name=confidence-level-' + questionId + ']:checked');
         var $chosen = $('input[name=answer-' + questionId + ']:checked');
@@ -10,8 +11,11 @@ function AnswerXBlock(runtime, element){
                 $chosen.each(function () {
                    choices.push($(this).attr('value'))
                 });
-                invoke('save_student_answers', {'questionId': questionId, 'chosen': choices, 'confidence': $CL.attr('value')}, function(data){
-                    console.log(data);
+                var cl_value = $CL.attr('value');
+                answers[questionId] = {'chosen': choices, 'confidence': cl_value};
+                console.log(answers);
+                invoke('save_student_answers', answers, function(data){
+                    console.log();
                     for (key in data) {
                         var $correct = $('#q' + questionId + '-check-' + key);
                         var $wrong = $('#q' + questionId + '-times-' + key);

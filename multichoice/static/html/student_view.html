@@ -1,4 +1,8 @@
 <div class="multichoice_student">
+    <input style="margin-bottom: 15px" type="button" onclick="window.location.href='http://localhost:8000/scenario/multichoice.0/author_view/';" value="Author View"/>
+    <input type="button" onclick="window.location.href='http://localhost:8000/scenario/multichoice.0/studio_view/';"
+           value="Studio View"/>
+
     % for question in xblock.questions:
     <fieldset class="question" id="${question['id']}">
         <legend>${question['question']}</legend>

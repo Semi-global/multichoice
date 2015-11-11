@@ -123,9 +123,7 @@ class MultiChoiceXBlock(XBlock):
     student_ans = [[1,1,1,1], [2,2,2,2]]
 
     ''' Student data '''
-    student_answers = List(
-        default=[], scope=Scope.user_state,
-    )
+    student_answers = {}
 
     score = Integer(
         default=0, scope=Scope.user_state,
@@ -181,15 +179,36 @@ class MultiChoiceXBlock(XBlock):
 
     @XBlock.json_handler
     def save_student_answers(self, data, suffix=''):
-        self.student_answers = data
-        return_data = {}
-        for answer_id in self.student_answers['chosen']:
-            if self._is_answer_correct(answer_id):
-                return_data[answer_id] = 'true'
-            else:
-                return_data[answer_id] = 'false'
+        """
+        Saves student answers passed from the student view,
+        and returns a dictionary with correctness of the answers back to student
 
-        return return_data
+        Arguments:
+            data: a dictionary that contains question ID, alternatives chosen by the student,
+                and confidence level of the student.
+                data =  {
+                            questionId: {
+                                chosen: [1, 2],
+                                confidence: 'High'
+                            }
+                        }
+        Returns:
+            dict: a dictionary containing answer ID and corresponding correctness.
+                dict =  {
+                            1: 'true',
+                            2: 'false'
+                        }
+        """
+        for i in data:
+            self.student_answers[i] = data[i]
+            return_data = {}
+            for answer_id in self.student_answers[i]['chosen']:
+                if self._is_answer_correct(answer_id):
+                    return_data[answer_id] = 'true'
+                else:
+                    return_data[answer_id] = 'false'
+
+            return return_data
 
     @XBlock.json_handler
     def get_questions(self, data, suffix=''):
@@ -219,6 +238,15 @@ class MultiChoiceXBlock(XBlock):
 
     ''' Helper methods '''
     def _is_answer_correct(self, answer_id):
+        """
+        Looks for the answer in the questions dictionary and returns correctness value of the answer.
+
+        Arguments:
+            answer_id (str): string value of the answer ID.
+
+        Returns:
+            bool: correctness value for a particular answer.
+        """
         for question in self.questions:
             for alternative in question['alternatives']:
                 if alternative['id'] == answer_id:
