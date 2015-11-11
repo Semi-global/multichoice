@@ -9,6 +9,7 @@ from mako.runtime import Context
 from StringIO import StringIO
 
 from questioncontroller import QuestionController
+from calculategrade import CalculateGrade
 
 
 class MultiChoiceXBlock(XBlock):
@@ -176,6 +177,11 @@ class MultiChoiceXBlock(XBlock):
                     return_data[answer_id] = 'false'
 
             return return_data
+
+    @XBlock.json_handler
+    def get_grade(self, data, suffix=''):
+        grade = CalculateGrade(self.runtime, len(self.student_answers)).__unicode__()
+        return {'grade': grade}
 
     @XBlock.json_handler
     def get_questions(self, data, suffix=''):
