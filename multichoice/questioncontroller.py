@@ -5,7 +5,7 @@ class QuestionController:
     questions = [
         {
             'id': 1,
-            'question': 'Choose A, B or C',
+            'question': 'tester',
             'alternatives': [{
                 'id': '1',
                 'text': 'A',
@@ -46,10 +46,8 @@ class QuestionController:
         return self.questions
 
     def addQuestion(self, question, alternatives):
-
         if not self.__isQuestionValid(question, alternatives):
             return False
-
         for alternative in alternatives:
             if not self.__isAlternativeValid(alternative):
                 return False
@@ -60,9 +58,9 @@ class QuestionController:
             'alternatives': alternatives
         }
 
-        self.XBlock.questions.append(question)
+        self.questions.append(question)
 
-        return question
+        return self.questions
 
     def __isQuestionValid(self, question, alternatives):
 
@@ -81,7 +79,7 @@ class QuestionController:
             return False
 
         if alternative.get('text') == None:
-            return False
+            return "ingen text"
 
         if len(alternative.get('text')) == 0:
             return False

@@ -144,7 +144,25 @@ class MultiChoiceXBlock(XBlock):
         return frag
 
     ''' JSON handler methods '''
-
+    @XBlock.json_handler
+    def save_questions(self, data, suffix=''):
+        " TODO: Add support for alternatives "
+        alt = [{
+                'id': '1',
+                'text': 'D',
+                'isCorrect': True
+            }, {
+                'id': '2',
+                'text': 'E',
+                'isCorrect': False
+            }, {
+                'id': '3',
+                'text': 'F',
+                'isCorrect': False
+         }]
+        res = self.questionController.addQuestion(data.get('question'), alt)
+     
+        return res
     @XBlock.json_handler
     def save_student_answers(self, data, suffix=''):
         """
@@ -189,7 +207,27 @@ class MultiChoiceXBlock(XBlock):
 
     @XBlock.json_handler
     def add_question(self, data, suffix=''):
-        question = 'Choose A, B or C'
+        question = 'ein fraga'
+        answers = []
+
+        answers.append({
+            'text': 'et spmol',
+            'isCorrect': True
+        })
+        answers.append({
+            'text': 'B',
+            'isCorrect': False
+        })
+        answers.append({
+            'text': 'C',
+            'isCorrect': False
+        })
+
+        addedQuestion = self.questionController.addQuestion(question, answers)
+
+        return {'numQuestions': len(self.questions), 'question': addedQuestion}
+
+        """question = 'Choose A, B or C'
         answers = []
 
         answers.append({
@@ -207,7 +245,7 @@ class MultiChoiceXBlock(XBlock):
 
         addedQuestion = self.questionController.addQuestion(question, answers)
 
-        return {'numQuestions': len(self.questions), 'question': addedQuestion}
+        return {'numQuestions': len(self.questions), 'question': addedQuestion}"""
 
     ''' Helper methods '''
     def _is_answer_correct(self, answer_id):

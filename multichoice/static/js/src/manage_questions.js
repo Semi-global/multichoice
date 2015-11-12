@@ -3,6 +3,7 @@ function MultiChoiceXBlock(runtime, element) {
 
     function invoke(method, data, onSuccess)
     {
+	console.log("invoked");
         var handlerUrl = runtime.handlerUrl(element, method);
 
         $.ajax({
@@ -14,7 +15,6 @@ function MultiChoiceXBlock(runtime, element) {
     }
 
     $(document).ready(function () {
-
         multichoiceqc = new MultichoiceQuestionController();
 
         invoke('get_questions', null, function(data) {
@@ -26,7 +26,25 @@ function MultiChoiceXBlock(runtime, element) {
             multichoiceqc.addAlternative('', false, -1);
         });
 
+        $('#multichoice-qf-save').click(function () {
+		var question = $("#multichoice-qf-question").val();
+		console.log("The question was " + question);
+		$(".multichoice-alterntive-input").each(function(i, obj) {
+			// hente verdi fra no i
+			// sende til kontroller
+		});
+		$.ajax({
+		    type: "POST",
+		    url: runtime.handlerUrl(element, 'save_questions'),
+		    data: JSON.stringify({question: question}),
+		    success: function(result) {
+		        console.log(result)
+		    }
+               });
+		var no = $("#questions_list li").size() + 1;
+		$("#questions_list").append("<li data-question=\"" + no + "\"><div class=\"multichoice-question\">" + question + "</div><div class=\"multichoice-x\">x</div><div class=\"clearfix\"></div></li>");
 
+        });
     });
 
 
