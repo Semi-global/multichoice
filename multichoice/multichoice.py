@@ -16,6 +16,7 @@ class MultiChoiceXBlock(XBlock):
     ''' Studio data '''
     ''' Use self.questionController.<somemethod/attr> to work with these variables'''
 
+
     title = String(
         default="", scope=Scope.content,
     )
@@ -115,6 +116,7 @@ class MultiChoiceXBlock(XBlock):
 
     def __init__(self, *args, **kwargs):
         super(XBlock, self).__init__(*args, **kwargs)
+        self.xmodule_runtime = self.runtime
         self.questionController = QuestionController(self)
 
     @property
