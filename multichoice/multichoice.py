@@ -93,6 +93,8 @@ class MultiChoiceXBlock(XBlock):
         default=0, scope=Scope.user_state,
     )
 
+    has_score = False
+
     questionInterface = None
 
     # TODO: Remove this after setup has been updated.
@@ -277,6 +279,10 @@ class MultiChoiceXBlock(XBlock):
         """ Handy helper for getting resources from our kit."""
         data = pkg_resources.resource_string(__name__, path)
         return data.decode("utf8")
+
+    @staticmethod
+    def get_progress(self):
+        return None
 
     @staticmethod
     def workbench_scenarios():
