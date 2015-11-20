@@ -10,6 +10,7 @@ from StringIO import StringIO
 
 from questioncontroller import QuestionController
 from calculategrade import CalculateGrade
+from question import Question
 
 
 class MultiChoiceXBlock(XBlock):
@@ -121,7 +122,7 @@ class MultiChoiceXBlock(XBlock):
 
     @property
     def get_questions_prop(self):
-        return self.questionController.getQuestions()
+        return self.questionController.get_questions()
 
     ''' Views '''
 
@@ -220,7 +221,7 @@ class MultiChoiceXBlock(XBlock):
         grade = ''
         try:
             # get the dictionary containing the questions and set the total score
-            question_dictionary = self.questionController.getQuestions()
+            question_dictionary = self.questionController.get_questions()
             total_score = len(question_dictionary)
             # create an object of the class that calculates the grade
             calc_grade = CalculateGrade(self, total_score, question_dictionary)
@@ -236,29 +237,57 @@ class MultiChoiceXBlock(XBlock):
 
     @XBlock.json_handler
     def get_questions(self, data, suffix=''):
-        return self.questionController.getQuestions()
+        return self.questionController.get_questions()
 
     @XBlock.json_handler
     def add_question(self, data, suffix=''):
-        question = 'Choose A, B or C'
-        answers = []
+        """
+        Adds question to question collection stored in ``QuestionController`` class.
+        :param data: JSON object that contains question in a format:
+                data = {
+                    question: {
+                        'id': 1,
+                        'text': 'Text',
+                        'alternatives': [
+                            {
+                                'id': '1',
+                                'text': 'Text',
+                                'isCorrect': 'false'
+                            },
+                            {
+                                'id': '2',
+                                'text': 'Text2',
+                                'isCorrect': 'false'
+                            },
+                            ...
+                        ],
+                        'hasDifficultyLevel: 'false'
+                    }
+                }
+        :param suffix:
+        :return: JSON object with the size of questions collection and last added question
+        """
 
-        answers.append({
-            'text': 'A',
-            'isCorrect': True
-        })
-        answers.append({
-            'text': 'B',
-            'isCorrect': False
-        })
-        answers.append({
-            'text': 'C',
-            'isCorrect': False
-        })
+        q_id = int(data[0]['id'])
+        q_text = data[0]['text']
+        if data[0]['hasDifficultyLevel'] is 'true':
+            q_has_diff_lvl = True
+        else:
+            q_has_diff_lvl = False
 
-        addedQuestion = self.questionController.addQuestion(question, answers)
+        new_question = Question(q_id, q_text, q_has_diff_lvl)
 
-        return {'numQuestions': len(self.questions), 'question': addedQuestion}
+        for a in data[0]['alternatives']:
+            if not new_question.add_alternative(a['id'], a['text'], a['isCorrect']):
+                return {'status': 'Not saved'}
+
+        if new_question.is_valid:
+            self.questionController.add_question(new_question)
+            num_questions = len(self.get_questions_prop)
+            question = self.get_questions_prop[num_questions - 1]
+            return {'status': 'Saved', 'numQuestions': num_questions, 'question': question}
+        else:
+            return{'status': 'Not saved'}
 
     ''' Helper methods '''
     def _is_answer_correct(self, answer_id):
