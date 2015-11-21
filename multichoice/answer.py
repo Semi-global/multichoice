@@ -2,6 +2,13 @@ _author_ = "Knut Lucas Andersen"
 
 
 class Answer(object):
+    """
+    Class container for Answer objects.
+
+    The Answer object can either be an answer alternative
+    created by a teacher (which then belongs to a question),
+    or an answer submitted by a student during a test/questionnaire.
+    """
 
     __answer_id = None
     __answer_text = None

@@ -1,13 +1,4 @@
-def is_alternative_valid(alternative):
-        if alternative['id'] is '':
-            return False
-        elif alternative['text'] is '':
-            return False
-        elif alternative['isCorrect'] is '':
-            return False
-        else:
-            return True
-
+from answer import Answer
 
 class Question(object):
 
@@ -36,18 +27,13 @@ class Question(object):
         return self.has_difficulty_level
 
     def add_alternative(self, alt_id, alt_text, alt_correct):
-        if alt_id is not str:
-            alt_id = str(alt_id)
-        alternative = {
-            'id': alt_id,
-            'text': alt_text,
-            'isCorrect': alt_correct
-        }
-        if is_alternative_valid(alternative):
-            self.alternatives.append(alternative)
-            return False
-        else:
+        try:
+            creation_mode = True  # value indicating this is teacher alternative
+            answer = Answer(creation_mode, alt_id, alt_text, alt_correct)
+            self.alternatives.append(answer)
             return True
+        except ValueError as e:
+            print(e)  # TODO: Add error handling here
 
     def get_alternatives(self):
         return self.alternatives
