@@ -173,8 +173,6 @@ class CalculateGrade:
         # loop through the submitted answers and those belonging to the question
         for current_alternative in question.get_alternatives():
             # if this is one of the submitted answers, check if it is correct
-                  (answer_id, current_alternative.get_answer_id(),
-                   current_alternative.get_is_answer_correct()))
             if current_alternative.get_answer_id() == answer_id:
                 if current_alternative.get_is_answer_correct():
                     score += confidence_level['correct']
