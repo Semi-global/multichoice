@@ -100,7 +100,6 @@ class CalculateGrade:
             confidence_level = self.__get_selected_confidence_level_score(details.get_selected_confidence())
             # check the selected answer(s) for this question and return score
             score += self.__check_if_answer_is_correct(details.get_answer_id(), question, confidence_level)
-            print("For answer (%s), score is %s." % (details.get_answer_id(), score))
         return score
 
     def __get_selected_confidence_level_score(self, selected_confidence_level):
@@ -174,8 +173,6 @@ class CalculateGrade:
         # loop through the submitted answers and those belonging to the question
         for current_alternative in question.get_alternatives():
             # if this is one of the submitted answers, check if it is correct
-            # TODO:
-            print("Selected Answer ID: %s. Answer ID: %s. Is Correct = %s" %
                   (answer_id, current_alternative.get_answer_id(),
                    current_alternative.get_is_answer_correct()))
             if current_alternative.get_answer_id() == answer_id:
