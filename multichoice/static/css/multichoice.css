@@ -7,6 +7,7 @@
 
 #multichoice-layout nav {
     width: 300px;
+    vertical-align: top;
     display: table-cell;
 }
 
@@ -23,6 +24,12 @@
     margin: 0;
 }
 
+#multichoice-layout .main {
+    padding-top: 0;
+}
+
+
+
 #multichoice-layout nav > ul > li {
     border-top: 1px solid #aaaaaa;
     border-right: 1px solid #aaaaaa;
@@ -31,6 +38,11 @@
     width: 300px;
     display: block;
     cursor: pointer;
+
+}
+
+#multichoice-layout h2 {
+    margin-top: 0;
 
 }
 
