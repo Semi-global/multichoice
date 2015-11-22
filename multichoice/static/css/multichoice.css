@@ -28,7 +28,9 @@
     padding-top: 0;
 }
 
-
+#multichoice-layout .active-question {
+    background-color: #f2f8ff;
+}
 
 #multichoice-layout nav > ul > li {
     border-top: 1px solid #aaaaaa;
