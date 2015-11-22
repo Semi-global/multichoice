@@ -1,3 +1,5 @@
+from question import Question
+
 _author_ = "Knut Lucas Andersen"
 
 
@@ -14,22 +16,22 @@ class CalculateGrade:
     __grade = None  # grade achieved
     __xblock = None  # container for the XBlock
     __is_score_calculated = False
-    __question_dictionary = None  # container for the questions asked
 
-    def __init__(self, xblock, total_score, question_dictionary):
+    def __init__(self, xblock, total_score, question_list):
         """
         Class constructor that initializes objects
 
         Arguments:
-             xblock (XBlock): Object of the parent XBlock class
+            xblock (XBlock): Object of the parent XBlock class
             total_score (float): Score/points needed to achieve 100%
-            question_dictionary (dict): Dictionary containing this questionnaires questions
+            question_list (dict): Dictionary containing this questionnaires questions
 
         """
         self.__xblock = xblock
         self.__total_score = total_score
         self.__is_score_calculated = False
-        self.__question_dictionary = question_dictionary
+        self.__question_list = question_list
+        self.__calculate_grade()
 
     def __unicode__(self):
         """
@@ -39,12 +41,11 @@ class CalculateGrade:
             str: Result text (score and grade)
 
         """
-        self.__calculate_grade()
         # variable for the grade string
         grade_text = "\nGrade: " + self.__grade
         # variable for the __score string
-        __score_text = "Your score was: " + str(self.__score) + "%."
-        return __score_text + grade_text
+        score_text = "Your score was: " + str(self.__score) + "%."
+        return score_text + grade_text
 
     def __calculate_grade(self):
         """
@@ -56,9 +57,6 @@ class CalculateGrade:
             score = self.__calculate_score()
         # calculate the score in percent
         self.__score = (score / self.__total_score) * 100
-        # due to confidence level, ensure that score cannot be higher then 100%
-        if self.__score > 100:
-            self.__score = 100
         # get the grade based on the score
         if self.__score >= grade_dictionary['gradeA']['score']:
             self.__grade = grade_dictionary['gradeA']['grade']
@@ -85,22 +83,24 @@ class CalculateGrade:
 
         See:
             | ``__get_selected_confidence_level_score``: Returns the confidence level for the current question
-            | ``__get_current_question``: Returns the question data belonging to the passed question id
-            | ``__check_if_answer_is_correct``: Checks if the submitted answers are the correct ones
+            | ``__get_current_question``: Returns the question object belonging to the passed question id
+            | ``__check_if_answer_is_correct``: Checks if the selected answer is correct
 
         Returns:
             float: The total score achieved on this questionnaire
 
         """
+
         score = 0.0
+        # get the students submitted answers and loop through them
         student_answer_dictionary = self.__xblock.student_answer_dictionary
-        for answer, details in student_answer_dictionary.iteritems():
+        for details in student_answer_dictionary:
             # get question and confidence level
-            question = self.__get_current_question(details['questionId'])
-            confidence_level = self.__get_selected_confidence_level_score(details['confidence'])
+            question = self.__get_current_question(details.get_question_id())
+            confidence_level = self.__get_selected_confidence_level_score(details.get_selected_confidence())
             # check the selected answer(s) for this question and return score
-            score += self.__check_if_answer_is_correct(details['chosen'], question, confidence_level)
-        self.__is_score_calculated = True
+            score += self.__check_if_answer_is_correct(details.get_answer_id(), question, confidence_level)
+            print("For answer (%s), score is %s." % (details.get_answer_id(), score))
         return score
 
     def __get_selected_confidence_level_score(self, selected_confidence_level):
@@ -125,57 +125,64 @@ class CalculateGrade:
 
     def __get_current_question(self, question_id):
         """
-        Returns the question data belonging to the passed question id.
+        Returns the question object matching the passed ```question_id```
 
         Arguments
-            question_id (int): The id of the question to retrieve data from
+            question_id (int): The id of the question object to retrieve
 
         Returns:
-            dict: Dictionary containing the data for this question id
+            Question: The Question object
 
         """
+
         counter = 0
         question = None
         question_not_found = True
-        question_dictionary = self.__question_dictionary
+        question_list = self.__question_list
+        list_size = len(question_list)
         # loop until the question is found, or all questions are checked
-        while question_not_found and counter < len(question_dictionary):
-            if question_dictionary[counter]['id'] == question_id:
-                question = question_dictionary[counter]
+        while question_not_found and counter < list_size:
+            current_question_id = question_list[counter].get_question_id()
+            if current_question_id == question_id:
+                question = question_list[counter]
                 question_not_found = False
             counter += 1
         return question
 
     @staticmethod
-    def __check_if_answer_is_correct(chosen_answers, question, confidence_level):
+    def __check_if_answer_is_correct(answer_id=int, question=Question, confidence_level=dict):
         """
-        Checks if the selected answer(s) on the current question are correct.
+        Checks if the currently selected answer is correct.
 
-        This functions checks the submitted answers to see if they are correct.
-        This is achieved by comparing the selected answers against the answers
-        belonging to the question, to see which one(s) are correct. The score
+        This functions checks if the currently selected answer is correct.
+        This is achieved by comparing the selected answer ID the answers
+        belonging to this question, to see which one(s) are correct. The score
         for each answer is based on the selected confidence level for this
         question.
 
         Arguments:
-            chosen_answers (dict): The submitted answers for this question
-            question (dict): The question which these answers belong to
+            answer_id (int): The ID of the selected answer
+            question (Question): The question the currently selected answer belongs to
             confidence_level (dict): The selected confidence level for this question
 
         Returns:
-            float: The total score for this question
+            float: The score for this question
 
         """
+
         score = 0.0
         # loop through the submitted answers and those belonging to the question
-        for current_answer in chosen_answers:
-            for current_alternative in question['alternatives']:
-                # if this is one of the submitted answers, check if it is correct
-                if int(current_alternative['id']) == current_answer:
-                    if current_alternative['isCorrect']:
-                        score += confidence_level['correct']
-                    else:
-                        score += confidence_level['wrong']
+        for current_alternative in question.get_alternatives():
+            # if this is one of the submitted answers, check if it is correct
+            # TODO:
+            print("Selected Answer ID: %s. Answer ID: %s. Is Correct = %s" %
+                  (answer_id, current_alternative.get_answer_id(),
+                   current_alternative.get_is_answer_correct()))
+            if current_alternative.get_answer_id() == answer_id:
+                if current_alternative.get_is_answer_correct():
+                    score += confidence_level['correct']
+                else:
+                    score += confidence_level['wrong']
         return score
 
     def get_score(self):
@@ -184,7 +191,6 @@ class CalculateGrade:
 
         Returns:
             float: Score achieved
-
         """
         return self.__score
 
@@ -194,43 +200,38 @@ class CalculateGrade:
 
         Returns:
             str: Grade achieved
-
         """
         return self.__grade
 
-    def check_if_dictionaries_is_set(self):
+    def check_if_lists_are_set(self):
         """
-        Checks if the dictionaries used have content (for debugging purposes)
-
+        Checks if the lists/dictionaries used have content (for debugging purposes)
         Returns:
-             str: String stating whether or not the given dictionaries have content
-
+             str: String stating whether or not the given lists/dictionaries have content
         """
         # get the dictionaries
-        questions_dictionary = self.__question_dictionary
+        questions_dictionary = self.__question_list
         student_answers_dictionary = self.__xblock.student_answer_dictionary
         grade_dictionary = self.__xblock.grade_dictionary
         confidence_level_dictionary = self.__xblock.confidenceLevels
         # get and return the result
-        result = self.__check_status_of_dictionary("Questions", questions_dictionary)
-        result += self.__check_status_of_dictionary("SubmittedAnswers", student_answers_dictionary)
-        result += self.__check_status_of_dictionary("Grades", grade_dictionary)
-        result += self.__check_status_of_dictionary("Confidence Level", confidence_level_dictionary)
+        result = self.__check_status_of_list("Questions", questions_dictionary)
+        result += " " + self.__check_status_of_list("SubmittedAnswers", student_answers_dictionary)
+        result += " " + self.__check_status_of_list("Grades", grade_dictionary)
+        result += " " + self.__check_status_of_list("Confidence Level", confidence_level_dictionary)
         return result
 
-    def __check_status_of_dictionary(self, name, dictionary):
+    def __check_status_of_list(self, name, content_list):
         """
-        Checks if the passed dictionary is None (empty) or has content (for debugging purposes).
+        Checks if the passed list is ```None``` (empty) or has content (for debugging purposes).
 
         Arguments:
-            name (str): The name of this dictionary (for text output)
-            dictionary (dict): The dictionary to check
-
+            name (str): The name of this list/dictionary (for text output)
+            content_list (obj): The list/dictionary to check
         Returns:
-             str: String informing whether or not the dictionary has content
-
+             str: String informing whether or not the list has content
         """
-        result = self.__check_if_dictionary_has_content(dictionary)
+        result = self.__check_if_list_has_content(content_list)
         # check content of passed dictionary
         if result is None:
             status = "Dictionary (" + name + ") is None."
@@ -239,22 +240,18 @@ class CalculateGrade:
         return status
 
     @staticmethod
-    def __check_if_dictionary_has_content(dictionary):
+    def __check_if_list_has_content(content_list):
         """
-        Checks if the passed dictionary has content or if it is None.
-        The function either returns None (if dictionary is empty) or
-        a string with the content and the length of the dictionary.
+        Checks if the passed list has content or if it is ```None```.
+        The function either returns None (if list is empty) or
+        a string with the content and the length of the list.
         (for debugging purposes)
-
         Arguments:
-            dictionary (dict): Dictionary to check
-
+            content_list (obj): List to check
         Returns:
             object: None || String (str)
-
         """
         content = None
-        if dictionary is not None:
-            content = "Content: " + str(dictionary) + " \nLength: " + str(len(dictionary))
+        if content_list is not None:
+            content = "Content: " + str(content_list) + " \nLength: " + str(len(content_list))
         return content
-

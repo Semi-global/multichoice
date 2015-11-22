@@ -11,6 +11,10 @@ from StringIO import StringIO
 from questioncontroller import QuestionController
 from calculategrade import CalculateGrade
 from question import Question
+from submittedanswers import SubmittedAnswer
+
+# TODO: This might be needed by Dmytro/Khai for creating/storing Teachers added alternatives
+from createdanswer import CreatedAnswer
 
 
 class MultiChoiceXBlock(XBlock):
@@ -99,21 +103,14 @@ class MultiChoiceXBlock(XBlock):
 
     questionInterface = None
 
-    # TODO: Remove this after setup has been updated.
-    # TODO: The class CalculateGrade requires this format to function.
-    # TODO: Do not remove until after demo (or until the original has been updated)
-    student_answer_dictionary = {
-        'question1': {
-            'questionId': 1,
-            'chosen': [2, 3],
-            'confidence': 'Low'
-        },
-        'question2': {
-            'questionId': 2,
-            'chosen': [1, 2],
-            'confidence': 'High'
-        }
-    }
+    # TODO: The following is the example of how answers submitted by students is expected to look
+    # TODO: question_id, answer_id, confidence_level (can select more than one alternative too
+    student_answer_dictionary = [
+        SubmittedAnswer(1, 2, 'low'),
+        SubmittedAnswer(1, 3, 'low'),
+        SubmittedAnswer(2, 4, 'high'),
+        SubmittedAnswer(2, 5, 'high')
+        ]
 
     def __init__(self, *args, **kwargs):
         super(XBlock, self).__init__(*args, **kwargs)
@@ -221,13 +218,13 @@ class MultiChoiceXBlock(XBlock):
         grade = ''
         try:
             # get the dictionary containing the questions and set the total score
-            question_dictionary = self.questionController.get_questions()
-            total_score = len(question_dictionary)
+            question_list = self.questionController.get_questions()
+            total_score = len(question_list)
             # create an object of the class that calculates the grade
-            calc_grade = CalculateGrade(self, total_score, question_dictionary)
+            calc_grade = CalculateGrade(self, total_score, question_list)
             # This is for debugging, in case it does not work
             # (checks if dictionaries has content)
-            # grade = calc_grade.check_if_dictionaries_is_set()
+            # grade = calc_grade.check_if_lists_are_set()
             # print the grade
             grade = calc_grade.__unicode__()
         except Exception, ex:
@@ -278,6 +275,8 @@ class MultiChoiceXBlock(XBlock):
         new_question = Question(q_id, q_text, q_has_diff_lvl)
 
         for a in data[0]['alternatives']:
+            # TODO: Note that the called function in CreatedAnswers throws error
+            # TODO: See comment in Question::add_alternative
             if not new_question.add_alternative(a['id'], a['text'], a['isCorrect']):
                 return {'status': 'Not saved'}
 

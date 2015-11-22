@@ -1,10 +1,11 @@
-from answer import Answer
+from createdanswer import CreatedAnswer
+
 
 class Question(object):
 
     id = None
     question = None
-    alternatives = []
+    # For format, see CreatedAnswers::__init__
     # alternative = {
     #     'id': '',
     #     'text': '',
@@ -16,6 +17,7 @@ class Question(object):
         self.question_id = question_id
         self.question_text = question
         self.has_difficulty_level = difficulty_level
+        self.alternatives = []
 
     def get_question_id(self):
         return self.question_id
@@ -28,12 +30,12 @@ class Question(object):
 
     def add_alternative(self, alt_id, alt_text, alt_correct):
         try:
-            creation_mode = True  # value indicating this is teacher alternative
-            answer = Answer(creation_mode, alt_id, alt_text, alt_correct)
+            answer = CreatedAnswer(alt_id, alt_text, alt_correct)
             self.alternatives.append(answer)
             return True
         except ValueError as e:
-            print(e)  # TODO: Add error handling here
+            # TODO: Remove print, add error handling here
+            print(e)
 
     def get_alternatives(self):
         return self.alternatives

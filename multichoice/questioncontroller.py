@@ -2,6 +2,7 @@ class QuestionController:
 
     XBlock = None
 
+    # TODO: This must be removed/Updated (I tried, but that removed the whole GUI)
     questions = [
         {
             'id': 1,
@@ -43,12 +44,15 @@ class QuestionController:
 
     def __init__(self, XBlock):
         self.XBlock = XBlock
+        # TODO: As noted in FB chat, this is how it should be initatied within a class
+        # self.questions = []
 
     def get_questions(self):
         return self.questions
 
     def add_question(self, question):
 
+        # TODO: This must be updated (or removed)
         if not self.__is_question_valid(question):
             return False
 
@@ -67,7 +71,7 @@ class QuestionController:
 
         return True
 
-
+    # TODO: This can be removed, handled by CreatedAnswers
     def __isAlternativeValid(self, alternative):
 
         if type(alternative) is not dict:
