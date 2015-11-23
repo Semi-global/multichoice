@@ -7,7 +7,7 @@
         <p></p>
     </div>
 
-    % for question in xblock.get_questions_prop:
+    % for question in xblock.questions:
     <fieldset class="question" id="${question['id']}">
         <legend>${question['question']}</legend>
         <div class="answers">
