@@ -8,7 +8,6 @@ from mako.template import Template
 from mako.runtime import Context
 from StringIO import StringIO
 
-from questioncontroller import QuestionController
 from calculategrade import CalculateGrade
 from question import Question
 from submittedanswers import SubmittedAnswer
@@ -21,6 +20,42 @@ class MultiChoiceXBlock(XBlock):
     ''' Studio data '''
     ''' Use self.questionController.<somemethod/attr> to work with these variables'''
 
+    # questions = [
+    #     {
+    #         'id': 1,
+    #         'question': 'Choose A, B or C',
+    #         'alternatives': [{
+    #             'id': '1',
+    #             'text': 'A',
+    #             'isCorrect': True
+    #         }, {
+    #             'id': '2',
+    #             'text': 'B',
+    #             'isCorrect': False
+    #         }, {
+    #             'id': '3',
+    #             'text': 'C',
+    #             'isCorrect': False
+    #         }]
+    #     },
+    #     {
+    #         'id': 2,
+    #         'question': 'Choose D, E or F',
+    #         'alternatives': [{
+    #             'id': '1',
+    #             'text': 'D',
+    #             'isCorrect': True
+    #         }, {
+    #             'id': '2',
+    #             'text': 'E',
+    #             'isCorrect': False
+    #         }, {
+    #             'id': '3',
+    #             'text': 'F',
+    #             'isCorrect': False
+    #         }]
+    #     }
+    # ]
 
     title = String(
         default="", scope=Scope.content,
@@ -31,7 +66,8 @@ class MultiChoiceXBlock(XBlock):
     )
 
     questions = List(
-        default=[], scope=Scope.content,
+        default=[]
+        , scope=Scope.content,
     )
 
     maxScore = Integer(
@@ -114,12 +150,9 @@ class MultiChoiceXBlock(XBlock):
 
     def __init__(self, *args, **kwargs):
         super(XBlock, self).__init__(*args, **kwargs)
-        self.xmodule_runtime = self.runtime
-        self.questionController = QuestionController(self)
-
-    @property
-    def get_questions_prop(self):
-        return self.questionController.get_questions()
+        # self.xmodule_runtime = self.runtime
+        self.default_questions()
+        # self.questionController = QuestionController(self)
 
     ''' Views '''
 
@@ -189,7 +222,7 @@ class MultiChoiceXBlock(XBlock):
             self.student_answers[i] = data[i]
             return_data = {}
             for answer_id in self.student_answers[i]['chosen']:
-                if self._is_answer_correct(answer_id):
+                if self._is_answer_correct(int(answer_id)):
                     return_data[answer_id] = 'true'
                 else:
                     return_data[answer_id] = 'false'
@@ -218,7 +251,7 @@ class MultiChoiceXBlock(XBlock):
         grade = ''
         try:
             # get the dictionary containing the questions and set the total score
-            question_list = self.questionController.get_questions()
+            question_list = self.questions
             total_score = len(question_list)
             # create an object of the class that calculates the grade
             calc_grade = CalculateGrade(self, total_score, question_list)
@@ -234,7 +267,7 @@ class MultiChoiceXBlock(XBlock):
 
     @XBlock.json_handler
     def get_questions(self, data, suffix=''):
-        return self.questionController.get_questions()
+        return self.questions
 
     @XBlock.json_handler
     def add_question(self, data, suffix=''):
@@ -281,15 +314,15 @@ class MultiChoiceXBlock(XBlock):
                 return {'status': 'Not saved'}
 
         if new_question.is_valid:
-            self.questionController.add_question(new_question)
-            num_questions = len(self.get_questions_prop)
-            question = self.get_questions_prop[num_questions - 1]
+            self.questions.append(new_question.to_json())
+            num_questions = len(self.questions)
+            question = self.questions[num_questions - 1]
             return {'status': 'Saved', 'numQuestions': num_questions, 'question': question}
         else:
             return{'status': 'Not saved'}
 
     ''' Helper methods '''
-    def _is_answer_correct(self, answer_id):
+    def _is_answer_correct(self, answer_id=int):
         """
         Looks for the answer in the questions dictionary and returns correctness value of the answer.
 
@@ -299,10 +332,45 @@ class MultiChoiceXBlock(XBlock):
         Returns:
             bool: correctness value for a particular answer.
         """
-        for question in self.get_questions_prop:
+
+        for question in self.questions:
             for alternative in question['alternatives']:
                 if alternative['id'] == answer_id:
                     return alternative['isCorrect']
+
+    @XBlock.json_handler
+    def delete_question(self, data, suffix=''):
+        self.questions.remove(int(data['question_id']))
+
+    @XBlock.json_handler
+    def update_field(self, data, suffix=''):
+        question = self.questions[int(data['id'])]
+        question[str(data['field'])] = data['value']
+
+    @XBlock.json_handler
+    def update_alternatives(self, data, suffix=''):
+        question = self.questions[int(data['question_id'])]
+        question['alternatives']['id'] = int(data['alt_id'])
+        question['alternatives']['text'] = data['text']
+        question['alternatives']['isCorrect'] = bool(data['isCorrect'])
+
+    @XBlock.json_handler
+    def delete_alt(self, data, suffix=''):
+        question_alt = self.questions[int(data['question_id'])]['alternatives']
+        question_alt.remove(int(data['alt_id']))
+
+    def default_questions(self):
+        del self.questions[:]
+        question1 = Question(1, 'Choose A, B or C', False)
+        question1.add_alternative(1, 'A', True)
+        question1.add_alternative(2, 'B', False)
+        question1.add_alternative(3, 'C', False)
+        self.questions.append(question1.to_json())
+        question2 = Question(2, 'Choose D, E or F', False)
+        question2.add_alternative(1, 'D', True)
+        question2.add_alternative(2, 'E', False)
+        question2.add_alternative(3, 'F', False)
+        self.questions.append(question2.to_json())
 
     @staticmethod
     def resource_string(path):
