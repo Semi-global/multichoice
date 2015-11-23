@@ -88,7 +88,7 @@
 }
 
 
-.multichoice-alterntive-input {
+.multichoice-alternative-input {
     padding: 5px;
     width: 90%;
     max-width: 950px;
@@ -103,6 +103,11 @@
 #multichoice-questionform .multichoice-x {
     float: none;
 }
+
+#multichoice-questionform .fa {
+    cursor: pointer;
+}
+
 
 
 .clearfix {

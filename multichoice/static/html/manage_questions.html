@@ -7,7 +7,7 @@
   <hr>  
 </div>
 <div id="multichoice-layout">
-    <nav>
+    <nav style="display:none">
         <ul>
         </ul>
 
@@ -16,21 +16,23 @@
 
     </nav>
     <div class="main">
-        <form id="multichoice-questionform">
+        <form id="multichoice-questionform" style="display:none">
             <label for="multichoice-qf-question"><h2>What is your question?</h2></label>
             <input type="text" id="multichoice-qf-question" />
 
             <h3>Alternatives</h3>
             <div id="multichoice-alternatives">
-                No alternatives added
             </div>
 
             <input type="button" id="multichoice-qf-add-alternative" value="Add alternative" />
 
             <input type="submit" value="Save" />
         </form>
-        <div id="multichoice-no-questions-added">
+        <div id="multichoice-no-questions-added" style="display:none">
             No questions added
+        </div>
+        <div id="multichoice-loading">
+            Loading questions
         </div>
 
 

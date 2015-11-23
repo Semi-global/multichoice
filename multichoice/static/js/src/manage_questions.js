@@ -13,7 +13,7 @@ function MultiChoiceXBlock(runtime, element) {
         });
 
         $('#multichoice-qf-add-alternative').click(function () {
-            multichoiceqc.addAlternative('', false, -1);
+            multichoiceqc.addAlternative(-1, '', false);
         });
 
     });
@@ -43,7 +43,7 @@ MultichoiceQuestionController.prototype.questions = [];
 MultichoiceQuestionController.prototype.removeQuestion = function (id) {
 
     console.log('remove when ready');
-    $('.question[data-id="' + id + '"').remove();
+    $('.question > [data-id="' + id + '"').parent().remove();
     for (key in this.questions)
     {
         if (this.questions[key].id == id)
@@ -53,7 +53,7 @@ MultichoiceQuestionController.prototype.removeQuestion = function (id) {
     return;
 
     invoke('remove_question', id, function(data) {
-        $('.question[data-id="' + id + '"').remove();
+        $('.question > [data-id="' + id + '"').parent().remove();
 
         for (key in this.questions)
         {
@@ -70,6 +70,10 @@ MultichoiceQuestionController.prototype.focusQuestion = function (id) {
 
     var activeQuestion = null;
     var firstQuestion = null;
+
+    $('#multichoice-loading').hide();
+    $('#multichoice-layout > nav').show();
+
     for (var key in this.questions)
     {
         if (!firstQuestion)
@@ -95,24 +99,64 @@ MultichoiceQuestionController.prototype.focusQuestion = function (id) {
 
     $('#multichoice-qf-question').val(activeQuestion.question);
     // set alternatives
+    $('#multichoice-alternatives').empty();
+    for (var key in activeQuestion.alternatives)
+    {
+        this.addAlternative(activeQuestion.alternatives[key].id, activeQuestion.alternatives[key].text, activeQuestion.alternatives[key].isCorrect);
+    }
+
 
 
     $('.question').removeClass('active-question');
-    $('.question[data-id="' + activeQuestion.id + '"').addClass('active-question');
+    $('.question > [data-id="' + activeQuestion.id + '"').parent().addClass('active-question');
 
 
 }
 
 
-MultichoiceQuestionController.prototype.addAlternative = function (alternative, isCorrect, id) {
+MultichoiceQuestionController.prototype.addAlternative = function (id, alternative, isCorrect) {
     $container = $('#multichoice-alternatives');
     $alternatives = $container.find('input[type=\'text\']');
     if ($alternatives.size() == 0) // only text
         $container.empty();
 
-    console.log($alternatives.size());
+    if (isCorrect)
+    {
+        isCorrect = 1; // to int
+        iconClass = 'fa-thumbs-o-up';
+    }
+    else
+    {
+        isCorrect = 0; // to int
+        iconClass = 'fa-thumbs-o-down';
+    }
 
-    $container.append('<div><span class="multichoice-x" data-id="' + id + '">x</span><input type="text" class="multichoice-alterntive-input" data-id="' + id + '" value="' + alternative + '" /><i class="fa fa-thumbs-o-up"></i></div>');
+    var idx = $('.multichoice-alternative-input').size();
+    var $alternative = $container.append('<div><span class="multichoice-x">x</span><input type="hidden" name="multichoice-alternative-iscorrect-' + idx + '" id="multichoice-alternative-iscorrect-' + idx + '" value="' + isCorrect + '" /><input type="text" name="multichoice-alternative-text-' + idx + '" class="multichoice-alternative-input" value="' + alternative + '" /><i class="fa ' + iconClass + '"></i></div>');
+
+    $alternative.find('.multichoice-x').click(function (e) {
+        $(e.target).parent().remove();
+    });
+
+
+    $alternative.find('.fa').click(function (e) {
+        var $i = $(e.target);
+
+        if ($i.hasClass('fa-thumbs-o-up'))
+        {
+            $i.removeClass('fa-thumbs-o-up');
+            $i.addClass('fa-thumbs-o-down');
+            $('#multichoice-alternative-iscorrect-' + idx).val(1);
+        }
+        else
+        {
+            $i.removeClass('fa-thumbs-o-down');
+            $i.addClass('fa-thumbs-o-up');
+            $('#multichoice-alternative-iscorrect-' + idx).val(0);
+        }
+
+    });
+
 
 }
 
@@ -123,14 +167,14 @@ MultichoiceQuestionController.prototype.setQuestions = function (questions) {
 
 MultichoiceQuestionController.prototype.populateQuestions  = function () {
 
+    var that = this;
     $ul = $('#multichoice-layout > nav > ul');
     $ul.empty();
 
     for (key in this.questions)
     {
-        $ul.append('<li class="question" data-id="' + this.questions[key].id + '"><div class="multichoice-question">' + this.questions[key].question + '</div><div class="multichoice-x" data-id="' + this.questions[key].id + '">x</div><div class="clearfix"></div></li>');
+        $ul.append('<li class="question"><div class="multichoice-question" data-id="' + this.questions[key].id + '">' + this.questions[key].question + '</div><div class="multichoice-x" data-id="' + this.questions[key].id + '">x</div><div class="clearfix"></div></li>');
     }
-
 
     $('.multichoice-x').click(function (e) {
 
@@ -141,6 +185,12 @@ MultichoiceQuestionController.prototype.populateQuestions  = function () {
 
         var id = $(e.target).data('id');
         multichoiceqc.removeQuestion(id);
+    });
+
+    $('.multichoice-question').click(function (e) {
+
+        var id = $(e.target).data('id');
+        that.focusQuestion(id);
     });
 
     this.focusQuestion(-1);
