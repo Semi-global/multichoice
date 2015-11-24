@@ -148,8 +148,8 @@ class MultiChoiceXBlock(XBlock):
     student_answer_dictionary = [
         SubmittedAnswer(1, 2, 'low'),
         SubmittedAnswer(1, 3, 'low'),
-        SubmittedAnswer(2, 4, 'high'),
-        SubmittedAnswer(2, 5, 'high')
+        SubmittedAnswer(2, 1, 'high'),
+        SubmittedAnswer(2, 2, 'high')
         ]
 
     def __init__(self, *args, **kwargs):
@@ -269,10 +269,14 @@ class MultiChoiceXBlock(XBlock):
         """
         grade = ''
         try:
-            # get the dictionary containing the questions and set the total score
-            question_list = self.questions_json_list
+            # get the list containing the questions,
+            # and check if its empty (if so, fill with default values)
+            question_list = self.question_objects_list
+            # TODO: This may have to be removed at a later time
+            if (question_list is None) or (len(question_list) is 0):
+                question_list = self.get_default_question_objects()
+            # get the number of questions, and set this as total score, then calculate the grade
             total_score = len(question_list)
-            # create an object of the class that calculates the grade
             calc_grade = CalculateGrade(self, total_score, question_list)
             # This is for debugging, in case it does not work
             # (checks if dictionaries has content)
@@ -476,18 +480,27 @@ class MultiChoiceXBlock(XBlock):
     #     for q in self.question_objects_list:
     #         self.questions_json_list.append(q.to_json())
 
-    def default_questions(self):
-        del self.questions_json_list[:]
+    @staticmethod
+    def get_default_question_objects():
+        """
+        Creates a list which is returned, this is to be used as default option in
+        the list ```question_objects_list```
+
+        Returns:
+            list: A list with default question objects
+        """
+        question_list = list()
         question1 = Question(1, 'Choose A, B or C', False)
         question1.add_alternative(1, 'A', True)
         question1.add_alternative(2, 'B', False)
         question1.add_alternative(3, 'C', False)
-        self.questions_json_list.append(question1.to_json())
+        question_list.append(question1)
         question2 = Question(2, 'Choose D, E or F', False)
         question2.add_alternative(1, 'D', True)
         question2.add_alternative(2, 'E', False)
         question2.add_alternative(3, 'F', False)
-        self.questions_json_list.append(question2.to_json())
+        question_list.append(question2)
+        return question_list
 
     @staticmethod
     def resource_string(path):
