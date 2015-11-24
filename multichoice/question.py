@@ -30,7 +30,7 @@ class Question(object):
 
     def add_alternative(self, alt_id=int, alt_text=str, alt_correct=None):
         try:
-            answer = CreatedAnswer(alt_id, alt_text, alt_correct)
+            answer = CreatedAnswer(int(alt_id), str(alt_text), bool(alt_correct))
             self.alternatives.append(answer)
             return True
         except ValueError as e:

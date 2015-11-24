@@ -38,7 +38,6 @@
 
 .multichoice_student .question-checkbox, .multichoice_student .cl-radio {
   display: inline-block;
-  margin-right: 10px;
 }
 
 .multichoice_student .submission {
@@ -56,4 +55,12 @@
 
 .multichoice_student #grade p{
     padding: 10px;
+}
+
+.multichoice_student .difficulty-level{
+
+}
+
+input[type=radio] {
+    margin-right: 10px;
 }

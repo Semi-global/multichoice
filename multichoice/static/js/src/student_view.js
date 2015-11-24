@@ -2,6 +2,23 @@ function AnswerXBlock(runtime, element){
 
     window.questionAmount = 0;
 
+    $(document).ready(function(){
+       //invoke('get_questions', null, function(data){
+       //    console.log(data);
+       //    for(var i=0; i < data.length; i++) {
+       //        if(data[i]['has_difficulty_level'] == true){
+       //            $('#sa-'+data[i]['id'])
+       //                .append('<div class="difficulty-level" id="dl-' + data[i]['id'] + '">' +
+       //                         + '<p>How difficult was this question?</p>' +
+       //                         + '<input class="dl-radio" type="radio" name="difficulty-level-' + data[i]['id'] + '" id="DL-0" value="Below average"/><label for="DL-0">Below average</label><br/>' +
+       //                         + '<input class="dl-radio" type="radio" name="difficulty-level-' + data[i]['id'] + '" id="DL-1" value="Above average"/><label for="DL-1">Above average</label><br/>' +
+       //                        '</div>')
+       //        }
+       //        //console.log(data[i]['has_difficulty_level']);
+       //    }
+       //})
+    });
+
     $('.submission > button').click(function (){
         var choices = [];
         var answers = {};
