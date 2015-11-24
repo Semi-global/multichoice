@@ -225,12 +225,28 @@ class MultiChoiceXBlock(XBlock):
             self.student_answers[i] = data[i]
             return_data = {}
             for answer_id in self.student_answers[i]['chosen']:
-                if self._is_answer_correct(int(answer_id)):
+                if self._is_answer_correct(answer_id):
                     return_data[answer_id] = 'true'
                 else:
                     return_data[answer_id] = 'false'
 
             return return_data
+
+    def _is_answer_correct(self, answer_id=int):
+        """
+        Looks for the answer in the questions dictionary and returns correctness value of the answer.
+
+        Arguments:
+            answer_id (str): string value of the answer ID.
+
+        Returns:
+            bool: correctness value for a particular answer.
+        """
+
+        for question in self.questions_json_list:
+            for alternative in question['alternatives']:
+                if alternative['id'] == answer_id:
+                    return alternative['isCorrect']
 
     @XBlock.json_handler
     def get_grade(self, data, suffix=''):
@@ -328,21 +344,6 @@ class MultiChoiceXBlock(XBlock):
             return {'status': 'unsuccessful', 'message': str(ex)}
 
     ''' Helper methods '''
-    def _is_answer_correct(self, answer_id=int):
-        """
-        Looks for the answer in the questions dictionary and returns correctness value of the answer.
-
-        Arguments:
-            answer_id (str): string value of the answer ID.
-
-        Returns:
-            bool: correctness value for a particular answer.
-        """
-
-        for question in self.questions_json_list:
-            for alternative in question['alternatives']:
-                if alternative['id'] == answer_id:
-                    return alternative['isCorrect']
 
     @XBlock.json_handler
     def delete_question(self, data, suffix=''):

@@ -32,7 +32,7 @@ function AnswerXBlock(runtime, element){
                    choices.push($(this).attr('value'))
                 });
                 var cl_value = $CL.attr('value');
-                answers['question'+questionId] = {'questionId': questionId, 'chosen': choices, 'confidence': cl_value};
+                answers['question'+questionId] = {'question_id': questionId, 'chosen': choices, 'confidence': cl_value};
                 console.log(answers['question1']);
                 invoke('save_student_answers', answers, function(data){
                     console.log(data);
