@@ -365,7 +365,7 @@ class MultiChoiceXBlock(XBlock):
             self.question_objects_list.remove(int(data['question_id']))
             return {'status': 'successful'}
         except Exception as ex:
-            return {'status': 'unsuccessful', 'message': str(ex)}
+            return {'status': 'unsuccessful', 'message': str(ex), 'id': int(data['question_id'])}
 
     @XBlock.json_handler
     def update_field(self, data, suffix=''):

@@ -55,26 +55,27 @@ MultichoiceQuestionController.prototype.questions = [];
 
 MultichoiceQuestionController.prototype.removeQuestion = function (id) {
 
-    console.log('remove when ready');
-    $('.question > [data-id="' + id + '"').parent().remove();
-    for (key in this.questions)
-    {
-        if (this.questions[key].id == id)
-            this.questions.splice(key, 1);
-    }
-    this.focusQuestion(-1, false);
-    return;
+    var that = this;
 
-    invoke('remove_question', id, function(data) {
-        $('.question > [data-id="' + id + '"').parent().remove();
+    invoke('delete_question', {question_id: id}, function(data) {
 
-        for (key in this.questions)
+        if (data == undefined || data.status != 'successful')
         {
-            if (this.questions[key].id == id)
-                this.questions.splice(key, 1);
+            that.setMessage('Could not remove question: ' + data.message, true);
         }
+        else
+        {
+            $('.question > [data-id="' + id + '"').parent().remove();
 
-        this.focusQuestion(-1, false);
+            for (key in this.questions)
+            {
+                if (this.questions[key].id == id)
+                    this.questions.splice(key, 1);
+            }
+
+            that.focusQuestion(-1, false);
+            that.setMessage('Question removed', false);
+        }
     });
 
 }
@@ -267,7 +268,27 @@ MultichoiceQuestionController.prototype.validateQuestion = function () {
 
 MultichoiceQuestionController.prototype.saveQuestion = function () {
 
-    console.log('save');
+    var question = {
+            id: 1,
+            text: 'Text',
+            alternatives: [
+                {
+                    'id': '1',
+                    'text': 'Text',
+                    'isCorrect': 'false'
+                }
+            ]
+    };
+
+    invoke('save_question', question, function(data) {
+
+        console.log(data);
+
+    });
+
+
+
+
 }
 
 
