@@ -108,6 +108,15 @@
     cursor: pointer;
 }
 
+#multichoice-errormessage {
+    color: #ac1b00;
+    display: none;
+}
+
+#multichoice-okmessage {
+    color: #168b06;
+    display: block;
+}
 
 
 .clearfix {

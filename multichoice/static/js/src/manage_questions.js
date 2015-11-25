@@ -115,6 +115,8 @@ MultichoiceQuestionController.prototype.focusQuestion = function (id) {
 
 
 MultichoiceQuestionController.prototype.addAlternative = function (id, alternative, isCorrect) {
+
+    var that = this;
     $container = $('#multichoice-alternatives');
     $alternatives = $container.find('input[type=\'text\']');
     if ($alternatives.size() == 0) // only text
@@ -132,14 +134,16 @@ MultichoiceQuestionController.prototype.addAlternative = function (id, alternati
     }
 
     var idx = $('.multichoice-alternative-input').size();
-    var $alternative = $container.append('<div><span class="multichoice-x">x</span><input type="hidden" name="multichoice-alternative-iscorrect-' + idx + '" id="multichoice-alternative-iscorrect-' + idx + '" value="' + isCorrect + '" /><input type="text" name="multichoice-alternative-text-' + idx + '" class="multichoice-alternative-input" value="' + alternative + '" /><i class="fa ' + iconClass + '"></i></div>');
+
+    var $alternative = $('<div><span class="multichoice-x">x</span><input type="hidden" name="multichoice-alternative-iscorrect-' + idx + '" id="multichoice-alternative-iscorrect-' + idx + '" value="' + isCorrect + '" /><input type="text" name="multichoice-alternative-text-' + idx + '" class="multichoice-alternative-input" value="' + alternative + '" /><i class="toggle fa ' + iconClass + '"></i></div>');
+    $container.append($alternative);
 
     $alternative.find('.multichoice-x').click(function (e) {
         $(e.target).parent().remove();
     });
 
+    $alternative.find('.toggle').click(function (e) {
 
-    $alternative.find('.fa').click(function (e) {
         var $i = $(e.target);
 
         if ($i.hasClass('fa-thumbs-o-up'))
@@ -158,6 +162,24 @@ MultichoiceQuestionController.prototype.addAlternative = function (id, alternati
     });
 
 
+}
+
+MultichoiceQuestionController.prototype.setMessage = function (message, isError) {
+
+    var $error = $('#multichoice-errormessage');
+    var $ok = $('#multichoice-okmessage');
+    var $target = null;
+
+    $error.hide();
+    $ok.hide();
+
+    if (isError)
+        $target = $error;
+    else
+        $target = $ok;
+
+    $target.html(message);
+    $target.show();
 }
 
 MultichoiceQuestionController.prototype.setQuestions = function (questions) {
