@@ -23,6 +23,11 @@ function MultiChoiceXBlock(runtime, element) {
             return false;
         });
 
+        $('#multichoice-add-question').click(function () {
+            multichoiceqc.focusQuestion(-1, true);
+        });
+
+
     });
 
     invoke = function (method, data, onSuccess)
@@ -47,6 +52,7 @@ var MultichoiceQuestionController = function () {
 
 MultichoiceQuestionController.prototype.questions = [];
 
+
 MultichoiceQuestionController.prototype.removeQuestion = function (id) {
 
     console.log('remove when ready');
@@ -56,7 +62,7 @@ MultichoiceQuestionController.prototype.removeQuestion = function (id) {
         if (this.questions[key].id == id)
             this.questions.splice(key, 1);
     }
-    this.focusQuestion(-1);
+    this.focusQuestion(-1, false);
     return;
 
     invoke('remove_question', id, function(data) {
@@ -68,12 +74,12 @@ MultichoiceQuestionController.prototype.removeQuestion = function (id) {
                 this.questions.splice(key, 1);
         }
 
-        this.focusQuestion(-1);
+        this.focusQuestion(-1, false);
     });
 
 }
 
-MultichoiceQuestionController.prototype.focusQuestion = function (id) {
+MultichoiceQuestionController.prototype.focusQuestion = function (id, isNew) {
 
     var activeQuestion = null;
     var firstQuestion = null;
@@ -94,7 +100,10 @@ MultichoiceQuestionController.prototype.focusQuestion = function (id) {
     if (!activeQuestion && firstQuestion)
         activeQuestion = firstQuestion;
 
-    if (!activeQuestion)
+    if (isNew)
+        activeQuestion = null;
+
+    if (!activeQuestion && !isNew)
     {
         $('#multichoice-questionform').hide();
         $('#multichoice-no-questions-added').show();
@@ -104,20 +113,28 @@ MultichoiceQuestionController.prototype.focusQuestion = function (id) {
     $('#multichoice-questionform').show();
     $('#multichoice-no-questions-added').hide();
 
-    $('#multichoice-question-id').val(activeQuestion.id);
-    $('#multichoice-qf-question').val(activeQuestion.question);
-    // set alternatives
     $('#multichoice-alternatives').empty();
-    for (var key in activeQuestion.alternatives)
-    {
-        this.addAlternative(activeQuestion.alternatives[key].id, activeQuestion.alternatives[key].text, activeQuestion.alternatives[key].isCorrect);
-    }
-
-
-
     $('.question').removeClass('active-question');
-    $('.question > [data-id="' + activeQuestion.id + '"').parent().addClass('active-question');
 
+
+    if (activeQuestion)
+    {
+        $('#multichoice-question-id').val(activeQuestion.id);
+        $('#multichoice-qf-question').val(activeQuestion.question);
+
+        for (var key in activeQuestion.alternatives)
+        {
+            this.addAlternative(activeQuestion.alternatives[key].id, activeQuestion.alternatives[key].text, activeQuestion.alternatives[key].isCorrect);
+        }
+
+        $('.question > [data-id="' + activeQuestion.id + '"').parent().addClass('active-question');
+
+    }
+    else
+    {
+        $('#multichoice-question-id').val(-1);
+        $('#multichoice-qf-question').val('');
+    }
 
 }
 
@@ -284,9 +301,9 @@ MultichoiceQuestionController.prototype.populateQuestions  = function () {
     $('.multichoice-question').click(function (e) {
 
         var id = $(e.target).data('id');
-        that.focusQuestion(id);
+        that.focusQuestion(id, false);
     });
 
-    this.focusQuestion(-1);
+    this.focusQuestion(-1, false);
 
 }
