@@ -16,6 +16,13 @@ function MultiChoiceXBlock(runtime, element) {
             multichoiceqc.addAlternative(-1, '', false);
         });
 
+        $('#multichoice-save-question').click(function () {
+            if (multichoiceqc.validateQuestion())
+                multichoiceqc.saveQuestion();
+
+            return false;
+        });
+
     });
 
     invoke = function (method, data, onSuccess)
@@ -97,6 +104,7 @@ MultichoiceQuestionController.prototype.focusQuestion = function (id) {
     $('#multichoice-questionform').show();
     $('#multichoice-no-questions-added').hide();
 
+    $('#multichoice-question-id').val(activeQuestion.id);
     $('#multichoice-qf-question').val(activeQuestion.question);
     // set alternatives
     $('#multichoice-alternatives').empty();
@@ -133,9 +141,7 @@ MultichoiceQuestionController.prototype.addAlternative = function (id, alternati
         iconClass = 'fa-thumbs-o-down';
     }
 
-    var idx = $('.multichoice-alternative-input').size();
-
-    var $alternative = $('<div><span class="multichoice-x">x</span><input type="hidden" name="multichoice-alternative-iscorrect-' + idx + '" id="multichoice-alternative-iscorrect-' + idx + '" value="' + isCorrect + '" /><input type="text" name="multichoice-alternative-text-' + idx + '" class="multichoice-alternative-input" value="' + alternative + '" /><i class="toggle fa ' + iconClass + '"></i></div>');
+    var $alternative = $('<div class="multichoice-alternative"><span class="multichoice-x">x</span><input type="hidden" class="multichoice-alternative-id" value="' + id + '" /><input type="hidden" class="multichoice-alternative-iscorrect" value="' + isCorrect + '" /><input type="text" class="multichoice-alternative-text" value="' + alternative + '" /><i class="toggle fa ' + iconClass + '"></i></div>');
     $container.append($alternative);
 
     $alternative.find('.multichoice-x').click(function (e) {
@@ -150,13 +156,13 @@ MultichoiceQuestionController.prototype.addAlternative = function (id, alternati
         {
             $i.removeClass('fa-thumbs-o-up');
             $i.addClass('fa-thumbs-o-down');
-            $('#multichoice-alternative-iscorrect-' + idx).val(1);
+            $i.parent().find('.multichoice-alternative-iscorrect').val(0);
         }
         else
         {
             $i.removeClass('fa-thumbs-o-down');
             $i.addClass('fa-thumbs-o-up');
-            $('#multichoice-alternative-iscorrect-' + idx).val(0);
+            $i.parent().find('.multichoice-alternative-iscorrect').val(1);
         }
 
     });
@@ -164,14 +170,23 @@ MultichoiceQuestionController.prototype.addAlternative = function (id, alternati
 
 }
 
+MultichoiceQuestionController.prototype.hideMessage = function () {
+
+    var $error = $('#multichoice-errormessage');
+    var $ok = $('#multichoice-okmessage');
+
+    $error.hide();
+    $ok.hide();
+}
+
+
 MultichoiceQuestionController.prototype.setMessage = function (message, isError) {
 
     var $error = $('#multichoice-errormessage');
     var $ok = $('#multichoice-okmessage');
     var $target = null;
 
-    $error.hide();
-    $ok.hide();
+    this.hideMessage();
 
     if (isError)
         $target = $error;
@@ -181,6 +196,63 @@ MultichoiceQuestionController.prototype.setMessage = function (message, isError)
     $target.html(message);
     $target.show();
 }
+
+MultichoiceQuestionController.prototype.validateQuestion = function () {
+    var error = '';
+    var foundIncorrectAlternatives = 0;
+    var foundCorrectAlternatives = 0;
+
+    this.hideMessage();
+
+    var question = $('#multichoice-qf-question').val();
+
+    if (question.length == 0)
+        error = 'Question is missing';
+
+    $('.multichoice-alternative').each(function () {
+
+        var $e = $(this);
+        var alternativeText = $e.find('.multichoice-alternative-text').val();
+        var isCorrect = $e.find('.multichoice-alternative-iscorrect').val();
+
+        if (alternativeText.length == 0)
+        {
+            error = 'Empty alternative';
+            return;
+        }
+
+        if (isCorrect == 0)
+            foundIncorrectAlternatives++;
+        else
+            foundCorrectAlternatives++;
+
+    });
+
+    if (error.length == 0)
+    {
+        if ((foundCorrectAlternatives + foundIncorrectAlternatives) < 2)
+            error = 'Too few alternatives';
+
+        if (foundCorrectAlternatives < 1)
+            error = 'No correct alternative added';
+
+    }
+
+    if (error.length > 0)
+    {
+        this.setMessage(error, true);
+        return false;
+    }
+
+
+    return true;
+}
+
+MultichoiceQuestionController.prototype.saveQuestion = function () {
+
+    console.log('save');
+}
+
 
 MultichoiceQuestionController.prototype.setQuestions = function (questions) {
     this.questions = questions;
