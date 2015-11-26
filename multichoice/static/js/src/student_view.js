@@ -3,20 +3,7 @@ function AnswerXBlock(runtime, element){
     window.questionAmount = 0;
 
     $(document).ready(function(){
-       //invoke('get_questions', null, function(data){
-       //    console.log(data);
-       //    for(var i=0; i < data.length; i++) {
-       //        if(data[i]['has_difficulty_level'] == true){
-       //            $('#sa-'+data[i]['id'])
-       //                .append('<div class="difficulty-level" id="dl-' + data[i]['id'] + '">' +
-       //                         + '<p>How difficult was this question?</p>' +
-       //                         + '<input class="dl-radio" type="radio" name="difficulty-level-' + data[i]['id'] + '" id="DL-0" value="Below average"/><label for="DL-0">Below average</label><br/>' +
-       //                         + '<input class="dl-radio" type="radio" name="difficulty-level-' + data[i]['id'] + '" id="DL-1" value="Above average"/><label for="DL-1">Above average</label><br/>' +
-       //                        '</div>')
-       //        }
-       //        //console.log(data[i]['has_difficulty_level']);
-       //    }
-       //})
+
     });
 
     $('.submission > button').click(function (){
@@ -32,8 +19,9 @@ function AnswerXBlock(runtime, element){
                    choices.push($(this).attr('value'))
                 });
                 var cl_value = $CL.attr('value');
-                answers['question'+questionId] = {'question_id': questionId, 'chosen': choices, 'confidence': cl_value};
-                console.log(answers['question1']);
+                answers = {'question_id': questionId, 'chosen': choices, 'confidence': cl_value};
+                console.log("answers: \n");
+                console.log(answers);
                 invoke('save_student_answers', answers, function(data){
                     console.log(data);
                     $submitButton.attr('disabled', 'disabled');
@@ -64,6 +52,7 @@ function AnswerXBlock(runtime, element){
            invoke('get_grade', {'amount': questionAmount}, function(data) {
                $('#grade > p').append(data['grade']);
                $('#grade').show(0);
+               console.log(data['answers'])
            })
         }
         else {

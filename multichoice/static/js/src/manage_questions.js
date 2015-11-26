@@ -57,11 +57,18 @@ MultichoiceQuestionController.prototype.removeQuestion = function (id) {
 
     var that = this;
 
+    console.log('question_id: ' + id);
+
     invoke('delete_question', {question_id: id}, function(data) {
 
         if (data == undefined || data.status != 'successful')
         {
             that.setMessage('Could not remove question: ' + data.message, true);
+            console.log(data['pos']);
+            console.log(data['message'])
+            //console.log(data['obj1']);
+            //console.log(data['obj2']);
+            console.log(data['index']);
         }
         else
         {

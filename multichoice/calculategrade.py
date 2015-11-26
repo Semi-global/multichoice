@@ -31,7 +31,7 @@ class CalculateGrade:
         self.__total_score = total_score
         self.__is_score_calculated = False
         self.__question_list = question_list
-        self.__calculate_grade()
+        # self.__calculate_grade()
 
     def __unicode__(self):
         """
@@ -47,7 +47,7 @@ class CalculateGrade:
         score_text = "Your score was: " + str(self.__score) + "%."
         return score_text + grade_text
 
-    def __calculate_grade(self):
+    def calculate_grade(self):
         """
         Calculates the grade based on the score achieved on this questionnaire
         """

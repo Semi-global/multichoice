@@ -30,42 +30,42 @@ class MultiChoiceXBlock(XBlock):
 
     questions_json_list = List(
         default=[
-            {
-                'id': 0,
-                'question': 'Choose A, B or C',
-                'alternatives': [{
-                    'id': '0',
-                    'text': 'A',
-                    'isCorrect': True
-                }, {
-                    'id': '1',
-                    'text': 'B',
-                    'isCorrect': False
-                }, {
-                    'id': '2',
-                    'text': 'C',
-                    'isCorrect': False
-                }],
-                'has_difficulty_level': True
-            },
-            {
-                'id': 1,
-                'question': 'Choose D, E or F',
-                'alternatives': [{
-                    'id': '0',
-                    'text': 'D',
-                    'isCorrect': True
-                }, {
-                    'id': '1',
-                    'text': 'E',
-                    'isCorrect': False
-                }, {
-                    'id': '2',
-                    'text': 'F',
-                    'isCorrect': False
-                }],
-                'has_difficulty_level': False
-            }
+            # {
+            #     'id': 0,
+            #     'question': 'Choose A, B or C',
+            #     'alternatives': [{
+            #         'id': '0',
+            #         'text': 'A',
+            #         'isCorrect': True
+            #     }, {
+            #         'id': '1',
+            #         'text': 'B',
+            #         'isCorrect': False
+            #     }, {
+            #         'id': '2',
+            #         'text': 'C',
+            #         'isCorrect': False
+            #     }],
+            #     'has_difficulty_level': True
+            # },
+            # {
+            #     'id': 1,
+            #     'question': 'Choose D, E or F',
+            #     'alternatives': [{
+            #         'id': '0',
+            #         'text': 'D',
+            #         'isCorrect': True
+            #     }, {
+            #         'id': '1',
+            #         'text': 'E',
+            #         'isCorrect': False
+            #     }, {
+            #         'id': '2',
+            #         'text': 'F',
+            #         'isCorrect': False
+            #     }],
+            #     'has_difficulty_level': False
+            # }
         ]
         , scope=Scope.content,
     )
@@ -133,7 +133,7 @@ class MultiChoiceXBlock(XBlock):
     student_ans = [[1,1,1,1], [2,2,2,2]]
 
     ''' Student data '''
-    student_answers = {}
+    student_answers = list()
 
     score = Integer(
         default=0, scope=Scope.user_state,
@@ -146,14 +146,18 @@ class MultiChoiceXBlock(XBlock):
     # TODO: The following is the example of how answers submitted by students is expected to look
     # TODO: question_id, answer_id, confidence_level (can select more than one alternative too
     student_answer_dictionary = [
-        SubmittedAnswer(1, 2, 'low'),
-        SubmittedAnswer(1, 3, 'low'),
-        SubmittedAnswer(2, 1, 'high'),
-        SubmittedAnswer(2, 2, 'high')
+        # SubmittedAnswer(1, 2, 'low'),
+        # SubmittedAnswer(1, 3, 'low'),
+        # SubmittedAnswer(2, 1, 'high'),
+        # SubmittedAnswer(2, 2, 'high')
         ]
 
     def __init__(self, *args, **kwargs):
         super(XBlock, self).__init__(*args, **kwargs)
+        if self.questions_json_list is None or len(self.questions_json_list) is 0:
+            self.questions_json_list = self.get_default_questions_json()
+        if self.question_objects_list is None or len(self.question_objects_list) is 0:
+            self.question_objects_list = self.get_default_questions_json()
         # self.xmodule_runtime = self.runtime
         # self.questionController = QuestionController(self)
 
@@ -221,23 +225,25 @@ class MultiChoiceXBlock(XBlock):
                             2: 'false'
                         }
         """
-        for i in data:
-            self.student_answers[i] = data[i]
-            return_data = {}
-            for answer_id in self.student_answers[i]['chosen']:
-                if self._is_answer_correct(answer_id):
-                    return_data[answer_id] = 'true'
-                else:
-                    return_data[answer_id] = 'false'
 
-            return return_data
+        self.student_answers.append(data)
+        return_data = {}
+        for answer_id in data['chosen']:
+            answer_obj = SubmittedAnswer(int(data['question_id']), int(answer_id), data['confidence'])
+            self.student_answer_dictionary.append(answer_obj)
+            if self._is_answer_correct(int(answer_id)):
+                return_data[answer_id] = 'true'
+            else:
+                return_data[answer_id] = 'false'
+
+        return return_data
 
     def _is_answer_correct(self, answer_id=int):
         """
         Looks for the answer in the questions dictionary and returns correctness value of the answer.
 
         Arguments:
-            answer_id (str): string value of the answer ID.
+            answer_id (int): string value of the answer ID.
 
         Returns:
             bool: correctness value for a particular answer.
@@ -271,22 +277,34 @@ class MultiChoiceXBlock(XBlock):
         try:
             # get the list containing the questions,
             # and check if its empty (if so, fill with default values)
-            question_list = self.question_objects_list
+            # question_list = self.questions_json_list
             # TODO: This may have to be removed at a later time
-            if (question_list is None) or (len(question_list) is 0):
-                question_list = self.get_default_question_objects()
+            # if (question_list is None) or (len(question_list) is 0):
+            #     question_list = self.get_default_question_objects()
             # get the number of questions, and set this as total score, then calculate the grade
+
+            # TODO: this part of code creates question objects out of JSON
+            question_list = list()
+            for answer in self.student_answers:
+                data['ans'] = answer
+                q_id = answer['question_id']
+                question = self.create_object_from_json(self.questions_json_list[int(q_id)])
+                question_list.append(question)
+            # TODO: END
+
+
             total_score = len(question_list)
             calc_grade = CalculateGrade(self, total_score, question_list)
             # This is for debugging, in case it does not work
             # (checks if dictionaries has content)
-            # grade = calc_grade.check_if_lists_are_set()
+            grade = calc_grade.check_if_lists_are_set()
+            calc_grade.calculate_grade()
             # print the grade
-            grade = calc_grade.__unicode__()
+            grade += calc_grade.__unicode__()
         except Exception, ex:
                 grade += "<p>An exception occurred: " + str(ex) + ". "
                 grade += "Failed at calculating grade."
-        return {'grade': grade}
+        return {'grade': grade, 'answers': data}
 
     @XBlock.json_handler
     def get_questions(self, data, suffix=''):
@@ -337,8 +355,8 @@ class MultiChoiceXBlock(XBlock):
                     return {'status': 'Not saved', 'message': 'Alternative is not valid'}
 
             if new_question.is_valid:
-                self.question_objects_list.append(new_question)
-                self.questions_json_list.append(new_question.to_json())
+                # self.question_objects_list.insert(data[0]['id'], new_question)
+                self.questions_json_list.insert(data[0]['id'], new_question.to_json())
                 num_questions = len(self.questions_json_list)
                 question = self.questions_json_list[num_questions - 1]
                 return {'status': 'successful', 'numQuestions': num_questions, 'question': question}
@@ -359,13 +377,28 @@ class MultiChoiceXBlock(XBlock):
         :param suffix: None
         :return: JSON object with status and exception text if caught.
         """
-
+        q_id = int(data['question_id'])
         try:
-            self.questions_json_list.remove(int(data['question_id']))
-            self.question_objects_list.remove(int(data['question_id']))
+            del self.questions_json_list[q_id]
+            # del self.question_objects_list[q_id]
+            # for question in self.questions_json_list:
+            #     if question['id'] is q_id:
+            #         self.question_objects_list.remove(int(q_id))
+            #         self.questions_json_list.remove(int(q_id))
+            return {'status': 'successful', }
+        except Exception as ex:
+            return {'status': 'unsuccessful', 'message': str(ex), 'pos': self.questions_json_list[0],
+                    'index': q_id}
+
+    @XBlock.json_handler
+    def update_question(self, data, suffix=''):
+        q_id = int(data['question_id'])
+        try:
+            self.delete_question(data)
+            self.add_question(data)
             return {'status': 'successful'}
         except Exception as ex:
-            return {'status': 'unsuccessful', 'message': str(ex), 'id': int(data['question_id'])}
+            return {'status': 'unsuccessful', 'message': str(ex)}
 
     @XBlock.json_handler
     def update_field(self, data, suffix=''):
@@ -386,12 +419,12 @@ class MultiChoiceXBlock(XBlock):
             q_id = int(data['question_id'])
             self.questions_json_list[q_id][str(data['field'])] = data['value']
             # question_object = self.question_objects_list[int(data['question_id'])]
-            if data['field'] is 'id':
-                self.question_objects_list[q_id].set_question_id(data['value'])
-            elif data['field'] is 'question':
-                self.question_objects_list[q_id].set_question_text(data['value'])
-            elif data['field'] is 'has_difficulty_level':
-                self.question_objects_list[q_id].set_has_difficulty_level(data['value'])
+            # if data['field'] is 'id':
+            #     self.question_objects_list[q_id].set_question_id(data['value'])
+            # elif data['field'] is 'question':
+            #     self.question_objects_list[q_id].set_question_text(data['value'])
+            # elif data['field'] is 'has_difficulty_level':
+            #     self.question_objects_list[q_id].set_has_difficulty_level(data['value'])
             return {'status': 'successful'}
         except Exception as ex:
             return {'status': 'unsuccessful', 'message': str(ex)}
@@ -419,7 +452,7 @@ class MultiChoiceXBlock(XBlock):
             self.questions_json_list[q_id]['alternatives']['id'] = alt_id
             self.questions_json_list[q_id]['alternatives']['text'] = str(data['text'])
             self.questions_json_list[q_id]['alternatives']['isCorrect'] = bool(data['isCorrect'])
-            self.question_objects_list[q_id].add_alternative(alt_id, str(data['text']), bool(data['isCorrect']))
+            # self.question_objects_list[q_id].add_alternative(alt_id, str(data['text']), bool(data['isCorrect']))
             return {'status': 'successful'}
         except Exception as ex:
             return {'status': 'unsuccessful', 'message': str(ex)}
@@ -446,8 +479,8 @@ class MultiChoiceXBlock(XBlock):
             alt_id = int(data['alt_id'])
             self.questions_json_list[q_id]['alternatives'][alt_id]['text'] = data['text']
             self.questions_json_list[q_id]['alternatives'][alt_id]['isCorrect'] = bool(data['isCorrect'])
-            self.question_objects_list[q_id].remove_alternative(alt_id)
-            self.question_objects_list[q_id].add_alternative(alt_id, data['text'], bool(data['isCorrect']))
+            # self.question_objects_list[q_id].remove_alternative(alt_id)
+            # self.question_objects_list[q_id].add_alternative(alt_id, data['text'], bool(data['isCorrect']))
             return {'status': 'successful'}
         except Exception as ex:
             return {'status': 'unsuccessful', 'message': str(ex)}
@@ -470,7 +503,7 @@ class MultiChoiceXBlock(XBlock):
             q_id = int(data['question_id'])
             alt_id = int(data['alt_id'])
             self.questions_json_list[q_id]['alternatives'].remove(alt_id)
-            self.question_objects_list[q_id].remove_alternative(alt_id)
+            # self.question_objects_list[q_id].remove_alternative(alt_id)
             return {'status': 'successful'}
         except Exception as ex:
             return {'status': 'unsuccessful', 'message': str(ex)}
@@ -490,16 +523,31 @@ class MultiChoiceXBlock(XBlock):
             list: A list with default question objects
         """
         question_list = list()
-        question1 = Question(1, 'Choose A, B or C', False)
-        question1.add_alternative(1, 'A', True)
-        question1.add_alternative(2, 'B', False)
-        question1.add_alternative(3, 'C', False)
+        question1 = Question(0, 'Choose A, B or C', False)
+        question1.add_alternative(0, 'A', True)
+        question1.add_alternative(1, 'B', False)
+        question1.add_alternative(2, 'C', False)
         question_list.append(question1)
-        question2 = Question(2, 'Choose D, E or F', False)
-        question2.add_alternative(1, 'D', True)
-        question2.add_alternative(2, 'E', False)
-        question2.add_alternative(3, 'F', False)
+        question2 = Question(1, 'Choose D, E or F', False)
+        question2.add_alternative(0, 'D', True)
+        question2.add_alternative(1, 'E', False)
+        question2.add_alternative(2, 'F', False)
         question_list.append(question2)
+        return question_list
+
+    @staticmethod
+    def get_default_questions_json():
+        question_list = list()
+        question1 = Question(0, 'Choose A, B or C', True)
+        question1.add_alternative(0, 'A', True)
+        question1.add_alternative(1, 'B', False)
+        question1.add_alternative(2, 'C', False)
+        question_list.append(question1.to_json())
+        question2 = Question(1, 'Choose D, E or F', False)
+        question2.add_alternative(0, 'D', True)
+        question2.add_alternative(1, 'E', False)
+        question2.add_alternative(2, 'F', False)
+        question_list.append(question2.to_json())
         return question_list
 
     @staticmethod
@@ -507,6 +555,38 @@ class MultiChoiceXBlock(XBlock):
         """ Handy helper for getting resources from our kit."""
         data = pkg_resources.resource_string(__name__, path)
         return data.decode("utf8")
+
+    @staticmethod
+    def create_object_from_json(self, json=dict):
+        """
+        Creates a question object from json dictionary
+
+        :param dict json: JSON object passed from the view with question and alternative IDs.
+                     Example: json = {
+                                            'id': 0,
+                                            'question': 'Choose A, B or C',
+                                            'alternatives': [{
+                                                'id': '0',
+                                                'text': 'A',
+                                                'isCorrect': True
+                                            }, {
+                                                'id': '1',
+                                                'text': 'B',
+                                                'isCorrect': False
+                                            }, {
+                                                'id': '2',
+                                                'text': 'C',
+                                                'isCorrect': False
+                                            }],
+                                            'has_difficulty_level': True
+                                      }
+        :return: question object
+        """
+
+        question = Question(json['id'], json['question'], json['has_difficulty_level'])
+        for alt in json['alternatives']:
+            question.add_alternative(alt['id'], alt['text'], alt['isCorrect'])
+        return question
 
     @staticmethod
     def get_progress(self):
