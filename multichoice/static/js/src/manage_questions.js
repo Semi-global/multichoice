@@ -282,21 +282,21 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
                 {
                     'id': '0',
                     'text': 'Blah',
-                    'isCorrect': 'false'
+                    'isCorrect': true
                 },
                 {
                     'id': '1',
                     'text': 'Blah!',
-                    'isCorrect': 'true'
+                    'isCorrect': true
                 },
                 {
                     'id': '2',
                     'text': 'Blah',
-                    'isCorrect': 'false'
+                    'isCorrect': false
                 }
 
             ],
-            hasDifficultyLevel: 'true'
+            hasDifficultyLevel: true
     };
 
     invoke('save_question', question, function(data) {
