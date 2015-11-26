@@ -52,7 +52,7 @@ function AnswerXBlock(runtime, element){
            invoke('get_grade', {'amount': questionAmount}, function(data) {
                $('#grade > p').append(data['grade']);
                $('#grade').show(0);
-               console.log(data['answers'])
+               console.log(data['q'])
            })
         }
         else {

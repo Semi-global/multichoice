@@ -280,12 +280,23 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
             text: 'Text',
             alternatives: [
                 {
+                    'id': '0',
+                    'text': 'Blah',
+                    'isCorrect': 'false'
+                },
+                {
                     'id': '1',
-                    'text': 'Text',
+                    'text': 'Blah!',
+                    'isCorrect': 'true'
+                },
+                {
+                    'id': '2',
+                    'text': 'Blah',
                     'isCorrect': 'false'
                 }
+
             ],
-            hasDifficultyLevel: 'false'
+            hasDifficultyLevel: 'true'
     };
 
     invoke('save_question', question, function(data) {

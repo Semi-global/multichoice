@@ -23,7 +23,7 @@
             <input class="cl-radio" type="radio" name="confidence-level-${question['id']}" id="CL-0" value="Low"/><label for="CL-0">Not confident</label><br/>
             <input class="cl-radio" type="radio" name="confidence-level-${question['id']}" id="CL-1" value="Normal"/><label for="CL-1">Somewhat confident</label><br/>
             <input class="cl-radio" type="radio" name="confidence-level-${question['id']}" id="CL-2" value="High"/><label for="CL-2">I'm certain</label><br/>
-            % if question['has_difficulty_level']:
+            % if question['has_difficulty_level'] is True:
                 <div class="difficulty-level" id="dl-${question['id']}">
                     <p>How difficult was this question?</p>
                     <input class="dl-radio" type="radio" name="difficulty-level-${question['id']}" id="DL-0" value="Below average"/><label for="DL-0">Below average</label><br/>

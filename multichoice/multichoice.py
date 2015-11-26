@@ -227,18 +227,19 @@ class MultiChoiceXBlock(XBlock):
         """
 
         self.student_answers.append(data)
-        return_data = {}
+        return_data = {'q': self.questions_json_list}
+        print data['question_id']
         for answer_id in data['chosen']:
             answer_obj = SubmittedAnswer(int(data['question_id']), int(answer_id), data['confidence'])
             self.student_answer_dictionary.append(answer_obj)
-            if self._is_answer_correct(int(answer_id)):
+            if self._is_answer_correct(int(answer_id), int(data['question_id'])):
                 return_data[answer_id] = 'true'
             else:
                 return_data[answer_id] = 'false'
 
         return return_data
 
-    def _is_answer_correct(self, answer_id=int):
+    def _is_answer_correct(self, answer_id=int, question_id=int):
         """
         Looks for the answer in the questions dictionary and returns correctness value of the answer.
 
@@ -249,10 +250,10 @@ class MultiChoiceXBlock(XBlock):
             bool: correctness value for a particular answer.
         """
 
-        for question in self.questions_json_list:
-            for alternative in question['alternatives']:
-                if alternative['id'] == answer_id:
-                    return alternative['isCorrect']
+        for alternative in self.questions_json_list[question_id]['alternatives']:
+            print alternative
+            if alternative['id'] == answer_id:
+                return alternative['isCorrect']
 
     @XBlock.json_handler
     def get_grade(self, data, suffix=''):
@@ -331,7 +332,7 @@ class MultiChoiceXBlock(XBlock):
                             },
                             ...
                         ],
-                        'hasDifficultyLevel: 'false'
+                        'hasDifficultyLevel': 'false'
                 }
         :param suffix:
         :return: JSON object with the size of questions collection and last added question
@@ -339,7 +340,7 @@ class MultiChoiceXBlock(XBlock):
         try:
             q_id = int(data['id'])
             q_text = data['text']
-            if data['hasDifficultyLevel'] is 'true':
+            if data['hasDifficultyLevel']:
                 q_has_diff_lvl = True
             else:
                 q_has_diff_lvl = False
@@ -408,9 +409,9 @@ class MultiChoiceXBlock(XBlock):
         question1.add_alternative(2, 'C', False)
         question_list.append(question1)
         question2 = Question(1, 'Choose D, E or F', False)
-        question2.add_alternative(0, 'D', True)
+        question2.add_alternative(0, 'D', False)
         question2.add_alternative(1, 'E', False)
-        question2.add_alternative(2, 'F', False)
+        question2.add_alternative(2, 'F', True)
         question_list.append(question2)
         return question_list
 
@@ -418,14 +419,14 @@ class MultiChoiceXBlock(XBlock):
     def get_default_questions_json():
         question_list = list()
         question1 = Question(0, 'Choose A, B or C', True)
-        question1.add_alternative(0, 'A', True)
-        question1.add_alternative(1, 'B', False)
+        question1.add_alternative(0, 'A', False)
+        question1.add_alternative(1, 'B', True)
         question1.add_alternative(2, 'C', False)
         question_list.append(question1.to_json())
         question2 = Question(1, 'Choose D, E or F', False)
-        question2.add_alternative(0, 'D', True)
+        question2.add_alternative(0, 'D', False)
         question2.add_alternative(1, 'E', False)
-        question2.add_alternative(2, 'F', False)
+        question2.add_alternative(2, 'F', True)
         question_list.append(question2.to_json())
         return question_list
 
