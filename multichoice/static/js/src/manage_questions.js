@@ -276,7 +276,7 @@ MultichoiceQuestionController.prototype.validateQuestion = function () {
 MultichoiceQuestionController.prototype.saveQuestion = function () {
 
     var question = {
-            id: 1,
+            id: 2,
             text: 'Text',
             alternatives: [
                 {
@@ -284,7 +284,8 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
                     'text': 'Text',
                     'isCorrect': 'false'
                 }
-            ]
+            ],
+            hasDifficultyLevel: 'false'
     };
 
     invoke('save_question', question, function(data) {

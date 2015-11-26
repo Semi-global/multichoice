@@ -311,12 +311,11 @@ class MultiChoiceXBlock(XBlock):
         return self.questions_json_list
 
     @XBlock.json_handler
-    def add_question(self, data, suffix=''):
+    def save_question(self, data, suffix=''):
         """
         Adds question to question collection stored in ``QuestionController`` class.
         :param data: JSON object that contains question in a format:
                 data = {
-                    question: {
                         'id': 1,
                         'text': 'Text',
                         'alternatives': [
@@ -333,30 +332,33 @@ class MultiChoiceXBlock(XBlock):
                             ...
                         ],
                         'hasDifficultyLevel: 'false'
-                    }
                 }
         :param suffix:
         :return: JSON object with the size of questions collection and last added question
         """
         try:
-            q_id = int(data[0]['id'])
-            q_text = data[0]['text']
-            if data[0]['hasDifficultyLevel'] is 'true':
+            q_id = int(data['id'])
+            q_text = data['text']
+            if data['hasDifficultyLevel'] is 'true':
                 q_has_diff_lvl = True
             else:
                 q_has_diff_lvl = False
 
             new_question = Question(q_id, q_text, q_has_diff_lvl)
 
-            for a in data[0]['alternatives']:
+            for a in data['alternatives']:
                 # TODO: Note that the called function in CreatedAnswers throws error
                 # TODO: See comment in Question::add_alternative
                 if not new_question.add_alternative(a['id'], a['text'], a['isCorrect']):
                     return {'status': 'Not saved', 'message': 'Alternative is not valid'}
 
             if new_question.is_valid:
-                # self.question_objects_list.insert(data[0]['id'], new_question)
-                self.questions_json_list.insert(data[0]['id'], new_question.to_json())
+                if q_id + 1 > len(self.questions_json_list):
+                    self.questions_json_list.append(new_question.to_json())
+                else:
+                    del self.questions_json_list[q_id]
+                    self.questions_json_list.insert(q_id, new_question.to_json())
+
                 num_questions = len(self.questions_json_list)
                 question = self.questions_json_list[num_questions - 1]
                 return {'status': 'successful', 'numQuestions': num_questions, 'question': question}
@@ -389,129 +391,6 @@ class MultiChoiceXBlock(XBlock):
         except Exception as ex:
             return {'status': 'unsuccessful', 'message': str(ex), 'pos': self.questions_json_list[0],
                     'index': q_id}
-
-    @XBlock.json_handler
-    def update_question(self, data, suffix=''):
-        q_id = int(data['question_id'])
-        try:
-            self.delete_question(data)
-            self.add_question(data)
-            return {'status': 'successful'}
-        except Exception as ex:
-            return {'status': 'unsuccessful', 'message': str(ex)}
-
-    @XBlock.json_handler
-    def update_field(self, data, suffix=''):
-        """
-        Updates question fields.
-
-        :param data: JSON object passed from the view. Should contain ID of the question, field name and value.
-                     Example: data = {
-                                         'question_id': 0,
-                                         'field': 'question',
-                                         'value': 'How much is 2x2?'
-                                     }
-        :param suffix: None
-        :return: JSON object with status and exception text if caught.
-        """
-
-        try:
-            q_id = int(data['question_id'])
-            self.questions_json_list[q_id][str(data['field'])] = data['value']
-            # question_object = self.question_objects_list[int(data['question_id'])]
-            # if data['field'] is 'id':
-            #     self.question_objects_list[q_id].set_question_id(data['value'])
-            # elif data['field'] is 'question':
-            #     self.question_objects_list[q_id].set_question_text(data['value'])
-            # elif data['field'] is 'has_difficulty_level':
-            #     self.question_objects_list[q_id].set_has_difficulty_level(data['value'])
-            return {'status': 'successful'}
-        except Exception as ex:
-            return {'status': 'unsuccessful', 'message': str(ex)}
-
-    @XBlock.json_handler
-    def add_alternative(self, data, suffix=''):
-        """
-        Adds alternative to the question
-
-        :param data: JSON object passed from the view with question ID, alternative ID and all alternative data.
-                     Example: data = {
-                                         'question_id': 0,
-                                         'alt_id': 0,
-                                         'text': 'First alternative',
-                                         'icCorrect': true
-                                     }
-
-        :param suffix: None
-        :return: JSON object with status and exception text if caught.
-        """
-
-        try:
-            q_id = int(data['question_id'])
-            alt_id = int(data['alt_id'])
-            self.questions_json_list[q_id]['alternatives']['id'] = alt_id
-            self.questions_json_list[q_id]['alternatives']['text'] = str(data['text'])
-            self.questions_json_list[q_id]['alternatives']['isCorrect'] = bool(data['isCorrect'])
-            # self.question_objects_list[q_id].add_alternative(alt_id, str(data['text']), bool(data['isCorrect']))
-            return {'status': 'successful'}
-        except Exception as ex:
-            return {'status': 'unsuccessful', 'message': str(ex)}
-
-    @XBlock.json_handler
-    def update_alternatives(self, data, suffix=''):
-        """
-        Updates alternatives for the question
-
-        :param data: JSON object passed from the view with question ID, alternative ID and all alternative data.
-                     Example: data = {
-                                         'question_id': 0,
-                                         'alt_id': 0,
-                                         'text': 'First alternative',
-                                         'icCorrect': true
-                                     }
-
-        :param suffix: None
-        :return: JSON object with status and exception text if caught.
-        """
-
-        try:
-            q_id = int(data['question_id'])
-            alt_id = int(data['alt_id'])
-            self.questions_json_list[q_id]['alternatives'][alt_id]['text'] = data['text']
-            self.questions_json_list[q_id]['alternatives'][alt_id]['isCorrect'] = bool(data['isCorrect'])
-            # self.question_objects_list[q_id].remove_alternative(alt_id)
-            # self.question_objects_list[q_id].add_alternative(alt_id, data['text'], bool(data['isCorrect']))
-            return {'status': 'successful'}
-        except Exception as ex:
-            return {'status': 'unsuccessful', 'message': str(ex)}
-
-    @XBlock.json_handler
-    def delete_alternative(self, data, suffix=''):
-        """
-        Deletes alternative for the question
-
-        :param data: JSON object passed from the view with question and alternative IDs.
-                     Exapmple: data = {
-                                          'question_id': 0,
-                                          'alt_id': 0
-                                      }
-        :param suffix: None
-        :return: JSON object with status and exception text if caught.
-        """
-
-        try:
-            q_id = int(data['question_id'])
-            alt_id = int(data['alt_id'])
-            self.questions_json_list[q_id]['alternatives'].remove(alt_id)
-            # self.question_objects_list[q_id].remove_alternative(alt_id)
-            return {'status': 'successful'}
-        except Exception as ex:
-            return {'status': 'unsuccessful', 'message': str(ex)}
-
-    # def reload_questions(self):
-    #     self.questions_json_list[:] = []
-    #     for q in self.question_objects_list:
-    #         self.questions_json_list.append(q.to_json())
 
     @staticmethod
     def get_default_question_objects():
