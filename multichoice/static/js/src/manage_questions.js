@@ -307,6 +307,9 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
 
     invoke('save_question', question, function(data) {
 
+        console.log('save_question response');
+        console.log(data);
+
         if (data == undefined || data.status != 'successful')
         {
             that.setMessage('Could not remove question: ' + data.message, true);
