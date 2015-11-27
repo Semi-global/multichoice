@@ -57,7 +57,7 @@ MultichoiceQuestionController.prototype.removeQuestion = function (id) {
 
     var that = this;
 
-    console.log('question_id: ' + id);
+    console.log('remove question id: ' + id);
 
     invoke('delete_question', {question_id: id}, function(data) {
 
@@ -301,12 +301,11 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
             hasDifficultyLevel: hasDifficultyLevelText
     };
 
-    console.log('sent');
+    console.log('sent when saving');
     console.log(question);
 
 
     invoke('save_question', question, function(data) {
-
 
         if (data == undefined || data.status != 'successful')
         {
@@ -323,19 +322,14 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
                 if (data.question != undefined && data.question.id != undefined)
                     that.focusQuestion(data.question.id);
             });
-
-
         }
     });
-
-
-
-
 }
 
 
 MultichoiceQuestionController.prototype.setQuestions = function (questions) {
     this.questions = questions;
+    console.log('got questions from server');
     console.log(questions);
 }
 
