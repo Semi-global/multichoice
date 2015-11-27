@@ -279,7 +279,6 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
         var alternativeText = $e.find('.multichoice-alternative-text').val();
         var isCorrect = $e.find('.multichoice-alternative-iscorrect').val();
         var id = $e.find('.multichoice-alternative-id').val();
-        var hasDifficultyLevel = false;
 
 
         alternatives.push({
@@ -293,7 +292,7 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
             id: $('#multichoice-question-id').val(),
             text: $('#multichoice-qf-question').val(),
             alternatives: alternatives,
-            hasDifficultyLevel: hasDifficultyLevel
+            hasDifficultyLevel: false
     };
 
     console.log('sent when saving');
