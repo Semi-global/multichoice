@@ -156,8 +156,8 @@ class MultiChoiceXBlock(XBlock):
         super(XBlock, self).__init__(*args, **kwargs)
         if self.questions_json_list is None or len(self.questions_json_list) is 0:
             self.questions_json_list = self.get_default_questions_json()
-        if self.question_objects_list is None or len(self.question_objects_list) is 0:
-            self.question_objects_list = self.get_default_questions_json()
+        # if self.question_objects_list is None or len(self.question_objects_list) is 0:
+        #     self.question_objects_list = self.get_default_questions_json()
         # self.xmodule_runtime = self.runtime
         # self.questionController = QuestionController(self)
 
@@ -293,7 +293,6 @@ class MultiChoiceXBlock(XBlock):
                 question_list.append(question)
             # TODO: END
 
-
             total_score = len(question_list)
             calc_grade = CalculateGrade(self, total_score, question_list)
             # This is for debugging, in case it does not work
@@ -347,18 +346,21 @@ class MultiChoiceXBlock(XBlock):
 
             new_question = Question(q_id, q_text, q_has_diff_lvl)
 
-            for a in data['alternatives']:
+            for i in range(0, len(data['alternatives'])):
                 # TODO: Note that the called function in CreatedAnswers throws error
                 # TODO: See comment in Question::add_alternative
-                if not new_question.add_alternative(a['id'], a['text'], a['isCorrect']):
+                if not new_question.add_alternative(i, data['alternatives'][i]['text'], data['alternatives'][i]['isCorrect']):
                     return {'status': 'Not saved', 'message': 'Alternative is not valid'}
 
             if new_question.is_valid:
-                if q_id > len(self.questions_json_list)-1:
+                if q_id < 0:
+                    new_question.set_question_id(len(self.questions_json_list))
                     self.questions_json_list.append(new_question.to_json())
                 else:
-                    del self.questions_json_list[q_id]
-                    self.questions_json_list.insert(q_id, new_question.to_json())
+                    for i in range(0, len(self.questions_json_list)):
+                        if self.questions_json_list[i]['id'] == q_id:
+                            del self.questions_json_list[i]
+                            self.questions_json_list.insert(i, new_question.to_json())
 
                 num_questions = len(self.questions_json_list)
                 question = self.questions_json_list[num_questions - 1]
@@ -382,16 +384,13 @@ class MultiChoiceXBlock(XBlock):
         """
         q_id = int(data['question_id'])
         try:
-            del self.questions_json_list[q_id]
             for i in range(0, len(self.questions_json_list)):
-                if self.questions_json_list[i]['id'] != i:
-                    self.questions_json_list[i]['id'] = i
-            # del self.question_objects_list[q_id]
-            # for question in self.questions_json_list:
-            #     if question['id'] is q_id:
-            #         self.question_objects_list.remove(int(q_id))
-            #         self.questions_json_list.remove(int(q_id))
-            return {'status': 'successful', }
+                print self.questions_json_list[i]['id']
+                print q_id
+                if self.questions_json_list[i]['id'] == q_id:
+                    del self.questions_json_list[i]
+                    break
+            return {'status': 'successful'}
         except Exception as ex:
             return {'status': 'unsuccessful', 'message': str(ex), 'pos': self.questions_json_list[0],
                     'index': q_id}
