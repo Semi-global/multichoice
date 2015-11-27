@@ -271,7 +271,6 @@ MultichoiceQuestionController.prototype.validateQuestion = function () {
 MultichoiceQuestionController.prototype.saveQuestion = function () {
 
     var that = this;
-    var hasDifficultyLevelText = 'True';
     var alternatives = [];
 
     $('.multichoice-alternative').each(function () {
@@ -280,17 +279,13 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
         var alternativeText = $e.find('.multichoice-alternative-text').val();
         var isCorrect = $e.find('.multichoice-alternative-iscorrect').val();
         var id = $e.find('.multichoice-alternative-id').val();
-        var isCorrectText = '';
+        var hasDifficultyLevel = false;
 
-        if (isCorrect == 0)
-            isCorrectText = 'False';
-        else
-            isCorrectText = 'True';
 
         alternatives.push({
                 id: id,
                 text: alternativeText,
-                isCorrect: isCorrectText
+                isCorrect: isCorrect
             });
     });
 
@@ -298,7 +293,7 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
             id: $('#multichoice-question-id').val(),
             text: $('#multichoice-qf-question').val(),
             alternatives: alternatives,
-            hasDifficultyLevel: hasDifficultyLevelText
+            hasDifficultyLevel: hasDifficultyLevel
     };
 
     console.log('sent when saving');
