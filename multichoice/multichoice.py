@@ -354,7 +354,7 @@ class MultiChoiceXBlock(XBlock):
                     return {'status': 'Not saved', 'message': 'Alternative is not valid'}
 
             if new_question.is_valid:
-                if q_id + 1 > len(self.questions_json_list):
+                if q_id > len(self.questions_json_list)-1:
                     self.questions_json_list.append(new_question.to_json())
                 else:
                     del self.questions_json_list[q_id]
@@ -383,6 +383,9 @@ class MultiChoiceXBlock(XBlock):
         q_id = int(data['question_id'])
         try:
             del self.questions_json_list[q_id]
+            for i in range(0, len(self.questions_json_list)):
+                if self.questions_json_list[i]['id'] != i:
+                    self.questions_json_list[i]['id'] = i
             # del self.question_objects_list[q_id]
             # for question in self.questions_json_list:
             #     if question['id'] is q_id:
