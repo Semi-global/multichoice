@@ -280,6 +280,10 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
         var isCorrect = $e.find('.multichoice-alternative-iscorrect').val();
         var id = $e.find('.multichoice-alternative-id').val();
 
+        if (isCorrect)
+            isCorrect = true;
+        else
+            isCorrect = false;
 
         alternatives.push({
                 id: id,
