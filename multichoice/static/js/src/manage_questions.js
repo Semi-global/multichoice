@@ -64,11 +64,6 @@ MultichoiceQuestionController.prototype.removeQuestion = function (id) {
         if (data == undefined || data.status != 'successful')
         {
             that.setMessage('Could not remove question: ' + data.message, true);
-            console.log(data['pos']);
-            console.log(data['message'])
-            //console.log(data['obj1']);
-            //console.log(data['obj2']);
-            console.log(data['index']);
         }
         else
         {
@@ -275,34 +270,62 @@ MultichoiceQuestionController.prototype.validateQuestion = function () {
 
 MultichoiceQuestionController.prototype.saveQuestion = function () {
 
-    var question = {
-            id: 2,
-            text: 'Text',
-            alternatives: [
-                {
-                    'id': '0',
-                    'text': 'Blah',
-                    'isCorrect': true
-                },
-                {
-                    'id': '1',
-                    'text': 'Blah!',
-                    'isCorrect': true
-                },
-                {
-                    'id': '2',
-                    'text': 'Blah',
-                    'isCorrect': false
-                }
+    var that = this;
+    var hasDifficultyLevelText = 'True';
+    var alternatives = [];
 
-            ],
-            hasDifficultyLevel: true
+    $('.multichoice-alternative').each(function () {
+
+        var $e = $(this);
+        var alternativeText = $e.find('.multichoice-alternative-text').val();
+        var isCorrect = $e.find('.multichoice-alternative-iscorrect').val();
+        var id = $e.find('.multichoice-alternative-id').val();
+        var isCorrectText = '';
+
+        if (isCorrect == 0)
+            isCorrectText = 'False';
+        else
+            isCorrectText = 'True';
+
+        alternatives.push({
+                id: id,
+                text: alternativeText,
+                isCorrect: isCorrectText
+            });
+    });
+
+    var question = {
+            id: $('#multichoice-question-id').val(),
+            text: $('#multichoice-qf-question').val(),
+            alternatives: alternatives,
+            hasDifficultyLevel: hasDifficultyLevelText
     };
+
+    console.log('sent');
+    console.log(question);
+
 
     invoke('save_question', question, function(data) {
 
-        console.log(data);
 
+        if (data == undefined || data.status != 'successful')
+        {
+            that.setMessage('Could not remove question: ' + data.message, true);
+        }
+        else
+        {
+            that.setMessage('Question saved', false);
+
+            invoke('get_questions', null, function(data) {
+                multichoiceqc.setQuestions(data);
+                multichoiceqc.populateQuestions();
+
+                if (data.question != undefined && data.question.id != undefined)
+                    that.focusQuestion(data.question.id);
+            });
+
+
+        }
     });
 
 
