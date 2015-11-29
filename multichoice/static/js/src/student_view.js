@@ -13,13 +13,24 @@ function AnswerXBlock(runtime, element){
         var $CL = $('input[name=confidence-level-' + questionId + ']:checked');
         var $chosen = $('input[name=answer-' + questionId + ']:checked');
         var $submitButton = $('#submit-question-' + questionId);
+        var $diff_level = $('#sa-' + questionId).find('input[name=difficulty-level-' + questionId + ']:checked');
+        var $is_diff_level = $('#sa-' + questionId).find('.difficulty-level');
         if($chosen.length > 0) {
             if($CL.length > 0) {
+                if ($is_diff_level.length > 0 && $diff_level.length == 0) {
+                    alert('Please choose difficulty level for this question');
+                    return false;
+                }
+                else if ($is_diff_level.length > 0 && $diff_level.length >0) {
+                    answers['difficulty_level'] = $diff_level.attr('value');
+                }
                 $chosen.each(function () {
                    choices.push($(this).attr('value'))
                 });
                 var cl_value = $CL.attr('value');
-                answers = {'question_id': questionId, 'chosen': choices, 'confidence': cl_value};
+                answers['question_id'] = questionId;
+                answers['chosen'] = choices;
+                answers['confidence'] = cl_value;
                 console.log("answers: \n");
                 console.log(answers);
                 invoke('save_student_answers', answers, function(data){

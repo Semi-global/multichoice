@@ -227,8 +227,8 @@ class MultiChoiceXBlock(XBlock):
         """
 
         self.student_answers.append(data)
-        return_data = {'q': self.questions_json_list}
-        print data['question_id']
+        return_data = {}
+        # print data['question_id']
         for answer_id in data['chosen']:
             answer_obj = SubmittedAnswer(int(data['question_id']), int(answer_id), data['confidence'])
             self.student_answer_dictionary.append(answer_obj)
@@ -385,8 +385,8 @@ class MultiChoiceXBlock(XBlock):
         q_id = int(data['question_id'])
         try:
             for i in range(0, len(self.questions_json_list)):
-                print self.questions_json_list[i]['id']
-                print q_id
+                # print self.questions_json_list[i]['id']
+                # print q_id
                 if self.questions_json_list[i]['id'] == q_id:
                     del self.questions_json_list[i]
                     break
