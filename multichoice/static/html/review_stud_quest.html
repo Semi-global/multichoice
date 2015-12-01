@@ -11,17 +11,15 @@
     <h4>Review answers</h4>
 
 
-    ${xblock.student_ans[0]}
+    <!--${xblock.student_ans[0]}-->
 
     <div class="">
         <hr>
         <h4>Choose student to see chosen answers</h4>
         <br>
 
-
         % for student in xblock.students:
         <div class="student-container">
-
             % for key, value in student.iteritems():
 
             % if key == "ID":
@@ -34,7 +32,6 @@
 
             % endfor
 
-
         </div>
         % endfor
 
@@ -42,6 +39,38 @@
 
     <br>
     <br>
+
+        % for index, question in enumerate(xblock.questions_json_list):
+    <fieldset class="question question-container" id="${question['id']}">
+        <legend>Question ${index+1} - ${question['question']}</legend>
+        <div class="answers">
+            % for alternative in question['alternatives']:
+            <input class="question-checkbox question-alternative alternative" onclick="return false" type="checkbox" id="A${alternative['id']}" name="answer-${question['id']}" value="${alternative['id']}"/>
+            <label for="A${alternative['id']}">${alternative['text']}</label><br/>
+            % endfor
+        </div>
+        <div class="self-assessment confidence-container" id="sa-${question['id']}">
+            <p>How confident are you about your answer?</p>
+            <input class="cl-radio confidence-alternative alternative" onclick="return false" type="radio" name="confidence-level-${question['id']}" id="CL-0" value="Low"/><label for="CL-0">Not confident</label><br/>
+            <input class="cl-radio confidence-alternative alternative" onclick="return false" type="radio" name="confidence-level-${question['id']}" id="CL-1" value="Normal"/><label for="CL-1">Somewhat confident</label><br/>
+            <input class="cl-radio confidence-alternative alternative" onclick="return false" type="radio" name="confidence-level-${question['id']}" id="CL-2" value="High"/><label for="CL-2">I'm certain</label><br/>
+            % if question['has_difficulty_level'] is True:
+                <div class="difficulty-level-container" id="dl-${question['id']}">
+                    <p>How difficult was this question?</p>
+                    <input class="dl-radio difficulty-level-alternative alternative" onclick="return false" type="radio" name="difficulty-level-${question['id']}" id="DL-0" value="Below"/><label for="DL-0">Below average</label><br/>
+                    <input class="dl-radio difficulty-level-alternative alternative" onclick="return false" type="radio" name="difficulty-level-${question['id']}" id="DL-1" value="Above"/><label for="DL-1">Above average</label><br/>
+                </div>
+            % endif
+        </div>
+        <!--<div class="submission">-->
+
+            <!--<button type="submit" value="submit" class="submit-button" id="submit-question-${question['id']}">Check</button>-->
+        <!--</div>-->
+    </fieldset>
+    <br>
+    % endfor
+
+    <!--
 
     <div class="questionnaire-review" style="float:right; margin-right: 25%;">
         <h5>When Norway and Denmark was an union what was it called?</h5>
@@ -104,6 +133,10 @@
 
 
     </div>
+
+    -->
+
+
 
 </div>
 </div>

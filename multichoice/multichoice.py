@@ -113,7 +113,7 @@ class MultiChoiceXBlock(XBlock):
         default=123, scope=Scope.content,
     )
 
-    student_answerArray = [1, 1, 2]
+    #student_answerArray = [1, 1, 2]
 
     students = [
         {
@@ -130,13 +130,47 @@ class MultiChoiceXBlock(XBlock):
         }
     ]
 
+
+    #Dummy array for answers, based on available questions 1. dec
+    students_sub = [
+        {
+            "id": "1",              #Identifies student
+            "questions": {          #List of alternatives chosen by student.
+                1: 1,               #Question number and the corresponding chosen alternative
+                2: 3
+            },
+            "confidence": {
+                0: 0,     #not confident
+                1: 2      #im certain
+            },
+            "difficulty": {
+                0: 1       #above average
+            }
+
+        },
+        {
+            "id": "2",
+            "questions": {
+                1: 3,
+                2: 1
+            },
+            "confidence": {
+                0: 1,
+                1: 0
+            },
+            "difficulty": {
+                0:0
+            }
+        }
+    ]
+
     student_ans = [[1,1,1,1], [2,2,2,2]]
 
     ''' Student data '''
     student_answers = list()
 
     score = Integer(
-        default=0, scope=Scope.user_state,
+        default=0, scope=Scope.user_state
     )
 
     has_score = False
@@ -201,7 +235,16 @@ class MultiChoiceXBlock(XBlock):
         frag.initialize_js('MultiChoiceXBlock')
         return frag
 
+
+
+
     ''' JSON handler methods '''
+
+    @XBlock.json_handler                            #Returns array with all students that have submitted answers:
+    def get_answers(self, data, suffix=''):
+        return self.students_sub
+
+
 
     @XBlock.json_handler
     def save_student_answers(self, data, suffix=''):

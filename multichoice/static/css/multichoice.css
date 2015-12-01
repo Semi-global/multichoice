@@ -136,3 +136,9 @@
     border: 1px solid;
     cursor:pointer;
 }
+
+.question-container .alternative:disabled {
+        background: #dddddd;
+        opacity: 1;
+
+}
