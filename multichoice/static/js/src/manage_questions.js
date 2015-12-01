@@ -57,8 +57,6 @@ MultichoiceQuestionController.prototype.removeQuestion = function (id) {
 
     var that = this;
 
-    console.log('remove question id: ' + id);
-
     invoke('delete_question', {question_id: id}, function(data) {
 
         if (data == undefined || data.status != 'successful')
@@ -124,6 +122,11 @@ MultichoiceQuestionController.prototype.focusQuestion = function (id, isNew) {
     {
         $('#multichoice-question-id').val(activeQuestion.id);
         $('#multichoice-qf-question').val(activeQuestion.question);
+
+        if (activeQuestion.has_difficulty_level)
+            $('#multichoice-difficulty-level').prop('checked', true);
+        else
+            $('#multichoice-difficulty-level').prop('checked', false);
 
         for (var key in activeQuestion.alternatives)
         {
@@ -277,10 +280,10 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
 
         var $e = $(this);
         var alternativeText = $e.find('.multichoice-alternative-text').val();
-        var isCorrect = $e.find('.multichoice-alternative-iscorrect').val();
+        var isCorrect = parseInt($e.find('.multichoice-alternative-iscorrect').val());
         var id = $e.find('.multichoice-alternative-id').val();
 
-        if (isCorrect)
+        if (isCorrect == 1)
             isCorrect = true;
         else
             isCorrect = false;
@@ -292,21 +295,16 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
             });
     });
 
+    var hasDifficultyLevel = $('#multichoice-difficulty-level').prop('checked');
+
     var question = {
             id: $('#multichoice-question-id').val(),
             text: $('#multichoice-qf-question').val(),
             alternatives: alternatives,
-            hasDifficultyLevel: false
+            hasDifficultyLevel: hasDifficultyLevel
     };
 
-    console.log('sent when saving');
-    console.log(question);
-
-
     invoke('save_question', question, function(data) {
-
-        console.log('save_question response');
-        console.log(data);
 
         if (data == undefined || data.status != 'successful')
         {
@@ -330,8 +328,6 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
 
 MultichoiceQuestionController.prototype.setQuestions = function (questions) {
     this.questions = questions;
-    console.log('got questions from server');
-    console.log(questions);
 }
 
 MultichoiceQuestionController.prototype.populateQuestions  = function () {
