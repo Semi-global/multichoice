@@ -18,7 +18,60 @@ from createdanswer import CreatedAnswer
 
 class MultiChoiceXBlock(XBlock):
     """ Studio data """
-    ''' Use self.questionController.<somemethod/attr> to work with these variables'''
+
+    confidenceLevels = Dict(
+        default={
+            'low': {
+                'correct': 1,
+                'wrong': 0
+            },
+            'normal': {
+                'correct': 1.5,
+                'wrong': -0.5
+            },
+            'high': {
+                'correct': 2,
+                'wrong': -1
+            }
+        }, scope=Scope.content,
+    )
+    """
+    The confidence level for each question, ranging from low to high.
+    The score goes from 0 and 1 for low, up to -1 and 2 for high.
+    The score received is based on whether or not the selected answer(s)
+    were correct. Used in ```CalculateGrade```
+
+    See:
+      |  ```CalculateGrade```
+    """
+
+    grade_dictionary = Dict(
+        default={
+            'gradeA': {'grade': 'A', 'score': 90},
+            'gradeB': {'grade': 'B', 'score': 80},
+            'gradeC': {'grade': 'C', 'score': 50},
+            'gradeD': {'grade': 'D', 'score': 40},
+            'gradeE': {'grade': 'E', 'score': 35},
+            'gradeF': {'grade': 'F', 'score': 0},
+        }, scope=Scope.content,
+    )
+    """
+    Dictionary containing the grades available, from A - F,
+    with the relevant score for each grade. Used in ```CalculateGrade```
+
+    See:
+      |  ```CalculateGrade```
+    """
+
+    student_answer_dictionary = []
+    """
+    This dictionary contains the current student answers to the given questionnaire.
+    For grade to be calculated properly, it expects objects of the class ```SubmittedAnswers```
+
+    See:
+      |  ```SubmittedAnswers```
+      |  ```CalculateGrade```
+    """
 
     title = String(
         default="", scope=Scope.content,
@@ -77,35 +130,6 @@ class MultiChoiceXBlock(XBlock):
 
     maxScore = Integer(
         default=0, scope=Scope.content,
-    )
-
-    confidenceLevels = Dict(
-        default={
-            'low': {
-                'correct': 1,
-                'wrong': 0
-            },
-            'normal': {
-                'correct': 1.5,
-                'wrong': -0.5
-            },
-            'high': {
-                'correct': 2,
-                'wrong': -1
-            }
-        }, scope=Scope.content,
-    )
-
-    # just some estimations for usage
-    grade_dictionary = Dict(
-        default={
-            'gradeA': {'grade': 'A', 'score': 90},
-            'gradeB': {'grade': 'B', 'score': 80},
-            'gradeC': {'grade': 'C', 'score': 50},
-            'gradeD': {'grade': 'D', 'score': 40},
-            'gradeE': {'grade': 'E', 'score': 35},
-            'gradeF': {'grade': 'F', 'score': 0},
-        }, scope=Scope.content,
     )
 
     student_name = "Lars"
@@ -177,23 +201,14 @@ class MultiChoiceXBlock(XBlock):
 
     questionInterface = None
 
-    # TODO: The following is the example of how answers submitted by students is expected to look
-    # TODO: question_id, answer_id, confidence_level (can select more than one alternative too
-    student_answer_dictionary = [
-        # SubmittedAnswer(1, 2, 'low'),
-        # SubmittedAnswer(1, 3, 'low'),
-        # SubmittedAnswer(2, 1, 'high'),
-        # SubmittedAnswer(2, 2, 'high')
-        ]
-
     def __init__(self, *args, **kwargs):
         super(XBlock, self).__init__(*args, **kwargs)
         if self.questions_json_list is None or len(self.questions_json_list) is 0:
             self.questions_json_list = self.get_default_questions_json()
-        # if self.question_objects_list is None or len(self.question_objects_list) is 0:
-        #     self.question_objects_list = self.get_default_questions_json()
-        # self.xmodule_runtime = self.runtime
-        # self.questionController = QuestionController(self)
+            # if self.question_objects_list is None or len(self.question_objects_list) is 0:
+            #     self.question_objects_list = self.get_default_questions_json()
+            # self.xmodule_runtime = self.runtime
+            # self.questionController = QuestionController(self)
 
     ''' Views '''
 
@@ -319,34 +334,18 @@ class MultiChoiceXBlock(XBlock):
         """
         grade = ''
         try:
-            # get the list containing the questions,
-            # and check if its empty (if so, fill with default values)
-            # question_list = self.questions_json_list
-            # TODO: This may have to be removed at a later time
-            # if (question_list is None) or (len(question_list) is 0):
-            #     question_list = self.get_default_question_objects()
-            # get the number of questions, and set this as total score, then calculate the grade
-
-            # TODO: this part of code creates question objects out of JSON
-            question_list = list()
-            for answer in self.student_answers:
-                data['ans'] = answer
-                q_id = answer['question_id']
-                question = self.create_object_from_json(self.questions_json_list[int(q_id)])
-                question_list.append(question)
-            # TODO: END
-
+            question_list = self.create_object_from_json()
             total_score = len(question_list)
             calc_grade = CalculateGrade(self, total_score, question_list)
             # This is for debugging, in case it does not work
             # (checks if dictionaries has content)
-            grade = calc_grade.check_if_lists_are_set()
+            # grade = calc_grade.check_if_lists_are_set()
             calc_grade.calculate_grade()
             # print the grade
             grade += calc_grade.__unicode__()
         except Exception, ex:
-                grade += "<p>An exception occurred: " + str(ex) + ". "
-                grade += "Failed at calculating grade."
+            grade += "<p>An exception occurred: " + str(ex) + ". "
+            grade += "Failed at calculating grade."
         return {'grade': grade, 'answers': data}
 
     @XBlock.json_handler
@@ -481,37 +480,30 @@ class MultiChoiceXBlock(XBlock):
         data = pkg_resources.resource_string(__name__, path)
         return data.decode("utf8")
 
-    @staticmethod
-    def create_object_from_json(self, json=dict):
+    def create_object_from_json(self):
         """
-        Creates a question object from json dictionary
+        Creates a list of Question objects from the JSON dictionary questions_json_list
 
-        :param dict json: JSON object passed from the view with question and alternative IDs.
-                     Example: json = {
-                                            'id': 0,
-                                            'question': 'Choose A, B or C',
-                                            'alternatives': [{
-                                                'id': '0',
-                                                'text': 'A',
-                                                'isCorrect': True
-                                            }, {
-                                                'id': '1',
-                                                'text': 'B',
-                                                'isCorrect': False
-                                            }, {
-                                                'id': '2',
-                                                'text': 'C',
-                                                'isCorrect': False
-                                            }],
-                                            'has_difficulty_level': True
-                                      }
-        :return: question object
+        Returns:
+            list: List containing objects of the class Questions
+
         """
-
-        question = Question(json['id'], json['question'], json['has_difficulty_level'])
-        for alt in json['alternatives']:
-            question.add_alternative(alt['id'], alt['text'], alt['isCorrect'])
-        return question
+        question_list = list()
+        # loop through all the json questions and add them to the list
+        for json_question in self.questions_json_list:
+            q_id = json_question['id']
+            q_text = json_question['question']
+            q_diff_lvl = json_question['has_difficulty_level']
+            question = Question(q_id, q_text, q_diff_lvl)
+            # loop through all the alternatives for this question and add them
+            for alt in json_question['alternatives']:
+                a_id = alt['id']
+                a_text = alt['text']
+                a_is_correct = alt['isCorrect']
+                question.add_alternative(a_id, a_text, a_is_correct)
+            # add the question object to the list
+            question_list.append(question)
+        return question_list
 
     @staticmethod
     def get_progress(self):

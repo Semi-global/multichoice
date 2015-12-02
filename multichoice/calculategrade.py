@@ -24,7 +24,7 @@ class CalculateGrade:
         Arguments:
             xblock (XBlock): Object of the parent XBlock class
             total_score (float): Score/points needed to achieve 100%
-            question_list (dict): Dictionary containing this questionnaires questions
+            question_list (list): Dictionary containing this questionnaires questions
 
         """
         self.__xblock = xblock
@@ -57,6 +57,11 @@ class CalculateGrade:
             score = self.__calculate_score()
         # calculate the score in percent
         self.__score = (score / self.__total_score) * 100
+        # since score can be over more than 100% and less then 0%, adjust it
+        if self.__score > 100:
+            self.__score = 100
+        elif self.__score < 0:
+            self.__score = 0
         # get the grade based on the score
         if self.__score >= grade_dictionary['gradeA']['score']:
             self.__grade = grade_dictionary['gradeA']['grade']
@@ -186,6 +191,7 @@ class CalculateGrade:
 
         Returns:
             float: Score achieved
+
         """
         return self.__score
 
@@ -195,14 +201,17 @@ class CalculateGrade:
 
         Returns:
             str: Grade achieved
+
         """
         return self.__grade
 
     def check_if_lists_are_set(self):
         """
         Checks if the lists/dictionaries used have content (for debugging purposes)
+
         Returns:
              str: String stating whether or not the given lists/dictionaries have content
+
         """
         # get the dictionaries
         questions_dictionary = self.__question_list
@@ -211,9 +220,10 @@ class CalculateGrade:
         confidence_level_dictionary = self.__xblock.confidenceLevels
         # get and return the result
         result = self.__check_status_of_list("Questions", questions_dictionary)
-        result += " " + self.__check_status_of_list("SubmittedAnswers", student_answers_dictionary)
-        result += " " + self.__check_status_of_list("Grades", grade_dictionary)
-        result += " " + self.__check_status_of_list("Confidence Level", confidence_level_dictionary)
+        result += "<br /> " + self.__check_status_of_list("SubmittedAnswers", student_answers_dictionary)
+        result += "<br /> " + self.__check_status_of_list("Grades", grade_dictionary)
+        result += "<br /> " + self.__check_status_of_list("Confidence Level", confidence_level_dictionary)
+        result += "<br /> "
         return result
 
     def __check_status_of_list(self, name, content_list):
@@ -223,8 +233,10 @@ class CalculateGrade:
         Arguments:
             name (str): The name of this list/dictionary (for text output)
             content_list (obj): The list/dictionary to check
+
         Returns:
              str: String informing whether or not the list has content
+
         """
         result = self.__check_if_list_has_content(content_list)
         # check content of passed dictionary
@@ -241,10 +253,13 @@ class CalculateGrade:
         The function either returns None (if list is empty) or
         a string with the content and the length of the list.
         (for debugging purposes)
+
         Arguments:
             content_list (obj): List to check
+
         Returns:
             object: None || String (str)
+
         """
         content = None
         if content_list is not None:
