@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/questionnaire_review.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">src/</a> questionnaire_review.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">13.11% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>8/61</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/4</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/19</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">13.11% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>8/61</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/* Javascript for MultiChoiceXBlock. */
+<span class="fstat-no" title="function not covered" >function MultiChoiceXBlock(runtime, element) {</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function invoke(method, data, onSuccess)</span>
+    {
+<span class="cstat-no" title="statement not covered" >        var handlerUrl = runtime.handlerUrl(element, method);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        $.ajax({</span>
+            type: "POST",
+            url: handlerUrl,
+            data: JSON.stringify(data),
+            success: onSuccess
+        });
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    $(document).ready(<span class="fstat-no" title="function not covered" >function () {</span></span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        multichoiceqc = new MultichoiceQuestionController();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        invoke('get_questions', null, <span class="fstat-no" title="function not covered" >function(data) {</span></span>
+<span class="cstat-no" title="statement not covered" >            multichoiceqc.setQuestions(data);</span>
+<span class="cstat-no" title="statement not covered" >            multichoiceqc.populateQuestions();</span>
+        });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        $('#multichoice-qf-add-alternative').click(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            multichoiceqc.addAlternative('', false, -1);</span>
+        });
+&nbsp;
+           //Listens for when a student has been selected:
+<span class="cstat-no" title="statement not covered" >        $('.student-container').click(<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >            var studentClickedId = parseInt($(this).find('.student-id').attr("id")); </span>             //Retrieves ID of clicked student.
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            console.log("Student clicked: "+studentClickedId);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            $('.questionnaire-review').fadeTo('fast', 0.3).fadeTo('fast', 1.0); </span>    //Fades clicked student to indicate seleciton
+&nbsp;
+            //All students except the one clicked has its background set to white:
+<span class="cstat-no" title="statement not covered" >            $('.student-container').each(<span class="fstat-no" title="function not covered" >function( index ) {</span></span>
+<span class="cstat-no" title="statement not covered" >                $(this).css("background-color", "white");</span>
+            });
+<span class="cstat-no" title="statement not covered" >            $(this).css("background-color", "#fc9a24") </span>                             //The one clicked gets new background color to show selection.
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            invoke('get_answers', null, <span class="fstat-no" title="function not covered" >function(data) {</span>                //Calla for method get_answers</span>
+                //multichoiceqc.get_answers();
+                //console.log(data)
+<span class="cstat-no" title="statement not covered" >             var currentId = "";</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            $(".question-alternative").each(<span class="fstat-no" title="function not covered" >function( index ) {</span></span>
+<span class="cstat-no" title="statement not covered" >            console.log("clearing question")</span>
+<span class="cstat-no" title="statement not covered" >               $(this).prop("checked", false);</span>
+             //  $(this).prop("disabled", true);
+            });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            $(".confidence-alternative").each(<span class="fstat-no" title="function not covered" >function( index ) {</span></span>
+<span class="cstat-no" title="statement not covered" >                console.log("clearing confidence")</span>
+<span class="cstat-no" title="statement not covered" >               $(this).prop("checked", false);</span>
+            });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            $(".difficulty-level-alternative").each(<span class="fstat-no" title="function not covered" >function( index ) {</span></span>
+<span class="cstat-no" title="statement not covered" >                console.log("clearing difficulty")</span>
+<span class="cstat-no" title="statement not covered" >               $(this).prop("checked", false);</span>
+            });
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            $.each(data, <span class="fstat-no" title="function not covered" >function(index, student) {</span>             //Goes through each returned students</span>
+<span class="cstat-no" title="statement not covered" >                currentId = student.id;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if(currentId == studentClickedId) {             //If the clicked student is found på by ID</span>
+<span class="cstat-no" title="statement not covered" >                   console.log("Should be correct student")</span>
+<span class="cstat-no" title="statement not covered" >                   console.log(student);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    var bufferQId;</span>
+<span class="cstat-no" title="statement not covered" >                   $.each(student.questions, <span class="fstat-no" title="function not covered" >function(index, question) {</span>        //Goes through all submitted answers belonging to student</span>
+                       //console.log(index, question)
+                       //console.log(index-1)
+&nbsp;
+                       //TODO match question number to questionnaire and select them to show what student answered.
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                            bufferQId = question-1;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                       $('.question-container').eq((index-1)).find('.question-alternative').eq(bufferQId).prop("checked", true);</span>
+&nbsp;
+                   });
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                   $.each(student.confidence, <span class="fstat-no" title="function not covered" >function(index, confidenceAlt) {</span>        //Goes through all submitted confidence levels</span>
+<span class="cstat-no" title="statement not covered" >                        console.log("Confidence", index)</span>
+<span class="cstat-no" title="statement not covered" >                        $('.confidence-container').eq(index).find('.confidence-alternative').eq(confidenceAlt).prop("checked", true);</span>
+                   });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                  $.each(student.difficulty, <span class="fstat-no" title="function not covered" >function(index, difficultyAlt) {</span>        //Goes through all submitted difficulty levels</span>
+<span class="cstat-no" title="statement not covered" >                        console.log("Difficulty", index)</span>
+<span class="cstat-no" title="statement not covered" >                        $('.difficulty-level-container').eq(index).find('.difficulty-level-alternative').eq(difficultyAlt).prop("checked", true);</span>
+                   });
+&nbsp;
+&nbsp;
+                }
+&nbsp;
+            });
+&nbsp;
+           })
+&nbsp;
+        });
+&nbsp;
+&nbsp;
+&nbsp;
+    });
+&nbsp;
+&nbsp;
+&nbsp;
+}
+&nbsp;
+var multichoiceqc = null;
+&nbsp;
+&nbsp;
+var MultichoiceQuestionController = <span class="fstat-no" title="function not covered" >function () {</span>
+}
+&nbsp;
+MultichoiceQuestionController.prototype.questions = [];
+&nbsp;
+MultichoiceQuestionController.prototype.addAlternative = <span class="fstat-no" title="function not covered" >function (alternative, isCorrect, id) {</span>
+<span class="cstat-no" title="statement not covered" >    $container = $('#multichoice-alternatives');</span>
+<span class="cstat-no" title="statement not covered" >    $alternatives = $container.find('input[type=\'text\']');</span>
+<span class="cstat-no" title="statement not covered" >    if ($alternatives.size() == 0) // only text</span>
+<span class="cstat-no" title="statement not covered" >        $container.empty();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    console.log($alternatives.size());</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    $container.append('&lt;div&gt;&lt;span class="multichoice-x"&gt;x&lt;/span&gt;&lt;input type="text" class="multichoice-alterntive-input" data-id="' + id + '" value="' + alternative + '" /&gt;&lt;i class="fa fa-thumbs-o-up"&gt;&lt;/i&gt;&lt;/div&gt;');</span>
+&nbsp;
+}
+&nbsp;
+MultichoiceQuestionController.prototype.setQuestions = <span class="fstat-no" title="function not covered" >function (questions) {</span>
+<span class="cstat-no" title="statement not covered" >    this.questions = questions;</span>
+}
+&nbsp;
+MultichoiceQuestionController.prototype.populateQuestions  = <span class="fstat-no" title="function not covered" >function () {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    $ul = $('#multichoice-layout &gt; nav &gt; ul');</span>
+<span class="cstat-no" title="statement not covered" >    $ul.empty();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    for (key in this.questions)</span>
+    {
+<span class="cstat-no" title="statement not covered" >        $ul.append('&lt;li data-question="' + this.questions[key].id + '"&gt;&lt;div class="multichoice-question"&gt;' + this.questions[key].question + '&lt;/div&gt;&lt;div class="multichoice-x"&gt;x&lt;/div&gt;&lt;div class="clearfix"&gt;&lt;/div&gt;&lt;/li&gt;');</span>
+    }
+&nbsp;
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Dec 04 2015 18:52:05 GMT+0000 (UTC)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

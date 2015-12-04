@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/student_view.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">src/</a> student_view.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">3.92% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>2/51</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/16</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">3.92% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>2/51</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="fstat-no" title="function not covered" >function AnswerXBlock(runtime, element){</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    window.questionAmount = 0;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    $(document).ready(<span class="fstat-no" title="function not covered" >function(){</span></span>
+&nbsp;
+    });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    $('.submission &gt; button').click(<span class="fstat-no" title="function not covered" >function (){</span></span>
+<span class="cstat-no" title="statement not covered" >        var choices = [];</span>
+<span class="cstat-no" title="statement not covered" >        var answers = {};</span>
+<span class="cstat-no" title="statement not covered" >        var questionId = $(this).closest('fieldset').attr('id');</span>
+<span class="cstat-no" title="statement not covered" >        var $CL = $('input[name=confidence-level-' + questionId + ']:checked');</span>
+<span class="cstat-no" title="statement not covered" >        var $chosen = $('input[name=answer-' + questionId + ']:checked');</span>
+<span class="cstat-no" title="statement not covered" >        var $submitButton = $('#submit-question-' + questionId);</span>
+<span class="cstat-no" title="statement not covered" >        var $diff_level = $('#sa-' + questionId).find('input[name=difficulty-level-' + questionId + ']:checked');</span>
+<span class="cstat-no" title="statement not covered" >        var $is_diff_level = $('#sa-' + questionId).find('.difficulty-level');</span>
+<span class="cstat-no" title="statement not covered" >        if($chosen.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >            if($CL.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                if ($is_diff_level.length &gt; 0 &amp;&amp; $diff_level.length == 0) {</span>
+<span class="cstat-no" title="statement not covered" >                    alert('Please choose difficulty level for this question');</span>
+<span class="cstat-no" title="statement not covered" >                    return false;</span>
+                }
+                else <span class="cstat-no" title="statement not covered" >if ($is_diff_level.length &gt; 0 &amp;&amp; $diff_level.length &gt;0) {</span>
+<span class="cstat-no" title="statement not covered" >                    answers['difficulty_level'] = $diff_level.attr('value');</span>
+                }
+<span class="cstat-no" title="statement not covered" >                $chosen.each(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                   choices.push($(this).attr('value'))</span>
+                });
+<span class="cstat-no" title="statement not covered" >                var cl_value = $CL.attr('value');</span>
+<span class="cstat-no" title="statement not covered" >                answers['question_id'] = questionId;</span>
+<span class="cstat-no" title="statement not covered" >                answers['chosen'] = choices;</span>
+<span class="cstat-no" title="statement not covered" >                answers['confidence'] = cl_value;</span>
+<span class="cstat-no" title="statement not covered" >                console.log("answers: \n");</span>
+<span class="cstat-no" title="statement not covered" >                console.log(answers);</span>
+<span class="cstat-no" title="statement not covered" >                invoke('save_student_answers', answers, <span class="fstat-no" title="function not covered" >function(data){</span></span>
+<span class="cstat-no" title="statement not covered" >                    console.log(data);</span>
+<span class="cstat-no" title="statement not covered" >                    $submitButton.attr('disabled', 'disabled');</span>
+<span class="cstat-no" title="statement not covered" >                    questionAmount++;</span>
+<span class="cstat-no" title="statement not covered" >                    console.log(questionAmount);</span>
+<span class="cstat-no" title="statement not covered" >                    for (key in data) {</span>
+<span class="cstat-no" title="statement not covered" >                        var $correct = $('#q' + questionId + '-check-' + key);</span>
+<span class="cstat-no" title="statement not covered" >                        var $wrong = $('#q' + questionId + '-times-' + key);</span>
+<span class="cstat-no" title="statement not covered" >                        console.log(data[key]);</span>
+<span class="cstat-no" title="statement not covered" >                        if (data[key] == "true")</span>
+<span class="cstat-no" title="statement not covered" >                            $correct.show(0);</span>
+                        else
+<span class="cstat-no" title="statement not covered" >                            $wrong.show(0);</span>
+                    }
+                })
+            }
+            else {
+<span class="cstat-no" title="statement not covered" >                alert('Choose your confidence level')</span>
+            }
+        }
+        else {
+<span class="cstat-no" title="statement not covered" >            alert('Make your choice')</span>
+        }
+    });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    $('#submit-all-questions').click(<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        if(questionAmount &gt; 0){</span>
+<span class="cstat-no" title="statement not covered" >           invoke('get_grade', {'amount': questionAmount}, <span class="fstat-no" title="function not covered" >function(data) {</span></span>
+<span class="cstat-no" title="statement not covered" >               $('#grade &gt; p').append(data['grade']);</span>
+<span class="cstat-no" title="statement not covered" >               $('#grade').show(0);</span>
+<span class="cstat-no" title="statement not covered" >               console.log(data['q'])</span>
+           })
+        }
+        else {
+<span class="cstat-no" title="statement not covered" >            alert('You have to answer at least one question');</span>
+        }
+    });
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function invoke(method, data, onSuccess)</span>
+    {
+<span class="cstat-no" title="statement not covered" >        var handlerUrl = runtime.handlerUrl(element, method);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        $.ajax({</span>
+            type: "POST",
+            url: handlerUrl,
+            data: JSON.stringify(data),
+            success: onSuccess
+        });
+    }
+&nbsp;
+&nbsp;
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Dec 04 2015 18:52:05 GMT+0000 (UTC)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

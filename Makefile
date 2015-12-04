@@ -21,10 +21,12 @@ install:
 	# The --noinput flag is for non-interactive runs, e.g. TravisCI.
 #	python manage.py syncdb --noinput
 
-test:
+testpy:
 	python manage.py test
-	jasmine-node tests --captureExceptions
+coverpy:
+	sonar-runner -Dsonar.projectKey=multichoice -Dsonar.projectName=Multichoice -Dsonar.projectVersion=1.0 -Dsonar.sources=. -Dsonar.sourceEncoding=UTF-8 -Dsonar.language=py
 
-cover:
-	coverage run manage.py test
-	coverage report
+testjs:
+	./tests/node_modules/.bin/karma start tests/karma.conf.js
+coverjs:
+	sonar-runner -Dsonar.projectKey=multichoice-js -Dsonar.projectName="Multichoice JS" -Dsonar.projectVersion="1.0" -Dsonar.sources="./jstest" -Dsonar.sourceEncoding=UTF-8 -Dsonar.language=js -Dsonar.javascript.lcov.reportPath="tests/reports/report-lcov/lcov.info" -Dsonar.javascript.jstest.reportsPath="tests/reports/junit"

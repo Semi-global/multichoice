@@ -1,0 +1,29 @@
+#example config
+
+
+#Pyton
+
+sonar.projectKey=multichoice
+sonar.projectName=Multichoice
+sonar.projectVersion=1.0
+sonar.sources=.
+sonar.sourceEncoding=UTF-8
+sonar.language=py
+
+sonar-runner -Dsonar.projectKey=multichoice -Dsonar.projectName=Multichoice -Dsonar.projectVersion=1.0 -Dsonar.sources=. -Dsonar.sourceEncoding=UTF-8 -Dsonar.language=py
+
+
+
+#JS
+sonar.projectKey=multichoice-js
+sonar.projectName=Multichoice JS
+sonar.projectVersion=1.0
+sonar.sources=../jstest
+sonar.sourceEncoding=UTF-8
+sonar.language=js
+sonar.javascript.lcov.reportPath=tests/reports/report-lcov/lcov.info
+sonar.javascript.jstest.reportsPath=tests/reports/junit
+
+
+
+sonar-runner -Dsonar.projectKey=multichoice-js -Dsonar.projectName="Multichoice JS" -Dsonar.projectVersion="1.0" -Dsonar.sources="./jstest" -Dsonar.sourceEncoding=UTF-8 -Dsonar.language=js -Dsonar.javascript.lcov.reportPath="tests/reports/report-lcov/lcov.info" -Dsonar.javascript.jstest.reportsPath="tests/reports/junit"
