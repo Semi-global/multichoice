@@ -60,6 +60,15 @@ function AnswerXBlock(runtime, element){
 
     $('#submit-all-questions').click(function(){
         if(questionAmount > 0){
+            //TODO: @DMYTRO,
+            //TODO: this is just testcode to show it works, so move this where its relevant
+           invoke('grade_students_difficulty_level', {'amount': questionAmount}, function(data) {
+               $('#grade > p').append(data['result']);
+               $('#grade').show(0);
+               console.log("result", data['result'])
+
+           });
+            //TODO - END: @DMYTRO
            invoke('get_grade', {'amount': questionAmount}, function(data) {
                $('#grade > p').append(data['grade']);
                $('#grade').show(0);

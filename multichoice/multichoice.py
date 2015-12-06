@@ -12,6 +12,8 @@ from calculategrade import CalculateGrade
 from question import Question
 from submittedanswers import SubmittedAnswer
 
+from gradedifficultylevel import GradeDifficultyLevel, DifficultyLevel, StudentsDifficultyData
+
 # TODO: This might be needed by Dmytro/Khai for creating/storing Teachers added alternatives
 from createdanswer import CreatedAnswer
 
@@ -72,6 +74,18 @@ class MultiChoiceXBlock(XBlock):
       |  ```SubmittedAnswers```
       |  ```CalculateGrade```
     """
+
+    bonus_point = 1.0
+    """
+    Bonus point given to each student for each successful guess on difficulty level questions
+    """
+
+    # test list for grading difficulty levels;
+    # Filled with dummy data in the function:
+    # grade_students_difficulty_level()
+    # Don't remove without asking
+    # ~LUCAS
+    submitted_student_answers = []
 
     title = String(
         default="", scope=Scope.content,
@@ -504,6 +518,43 @@ class MultiChoiceXBlock(XBlock):
             # add the question object to the list
             question_list.append(question)
         return question_list
+
+    @XBlock.json_handler
+    def grade_students_difficulty_level(self, data, suffix=''):
+        result = ''
+        try:
+            # TODO: Update/remove this; for now create dummy list
+            # studNo, score_Q1, scoreQ2 -> For dummy data
+            # stud1 points: 1, 0
+            # stud2 points: 0, 1
+            # stud3 points: 1, 1
+            diff_list1 = [
+                DifficultyLevel(0, "above", 1),
+                DifficultyLevel(1, "easy", 1)
+            ]
+            diff_list2 = [
+                DifficultyLevel(0, "easy", 1),
+                DifficultyLevel(1, "above", 1)
+            ]
+            diff_list3 = [
+                DifficultyLevel(0, "above", 1),
+                DifficultyLevel(1, "above", 1)
+            ]
+            # TODO: Update this part; for now create dummy list
+            self.submitted_student_answers = [
+                StudentsDifficultyData(1, 1, diff_list1),
+                StudentsDifficultyData(2, 2, diff_list2),
+                StudentsDifficultyData(3, 4, diff_list3)
+            ]
+            # initiate class and get values
+            question_list = self.create_object_from_json()
+            grade_diff_lvl = GradeDifficultyLevel(self, question_list, self.bonus_point)
+            grade_diff_lvl.update_score_based_on_submitted_difficulty_levels()
+            result = grade_diff_lvl.print_difficulty_rating_votes() + "<br />"
+            result += grade_diff_lvl.print_students_updated_score()
+        except Exception, ex:
+            result = "An exception occurred: " + str(ex)
+        return {'result': result}
 
     @staticmethod
     def get_progress(self):

@@ -31,7 +31,6 @@ class CalculateGrade:
         self.__total_score = total_score
         self.__is_score_calculated = False
         self.__question_list = question_list
-        # self.__calculate_grade()
 
     def __unicode__(self):
         """
