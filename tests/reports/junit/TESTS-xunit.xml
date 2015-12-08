@@ -1,11 +1,24 @@
 <?xml version="1.0"?>
-<testsuite name="Chromium 45.0.2454 (Ubuntu 0.0.0)" package="" timestamp="2015-12-04T19:20:29" id="0" hostname="ci" tests="1" errors="0" failures="0" time="0">
+<testsuite name="Chromium 45.0.2454 (Ubuntu 0.0.0)" package="" timestamp="2015-12-07T20:54:21" id="0" hostname="ci" tests="10" errors="0" failures="0" time="0.045">
   <properties>
     <property name="browser.fullName" value="Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/45.0.2454.101 Chrome/45.0.2454.101 Safari/537.36"/>
   </properties>
-  <testcase name="invoke should be null" time="0" classname="manage_questions"/>
+  <testcase name="focus question negative - none available" time="0.012" classname="manage_questions"/>
+  <testcase name="fetch and set questions" time="0.013" classname="manage_questions"/>
+  <testcase name="remove question negative" time="0.003" classname="manage_questions"/>
+  <testcase name="remove question positive" time="0.005" classname="manage_questions"/>
+  <testcase name="focus question" time="0.002" classname="manage_questions"/>
+  <testcase name="focus question negative - find first available" time="0.002" classname="manage_questions"/>
+  <testcase name="focus question - set up new question" time="0.002" classname="manage_questions"/>
+  <testcase name="save question" time="0.001" classname="manage_questions"/>
+  <testcase name="xblock init" time="0.005" classname="manage_questions"/>
+  <testcase name="validate question" time="0" classname="manage_questions"/>
   <system-out>
-    <![CDATA[
+    <![CDATA[Chromium 45.0.2454 (Ubuntu 0.0.0) LOG: 'callFake on mc.invoke: get_questions'
+,Chromium 45.0.2454 (Ubuntu 0.0.0) LOG: 'callFake on mc.invoke: delete_question'
+,Chromium 45.0.2454 (Ubuntu 0.0.0) LOG: 'callFake on mc.invoke: delete_question'
+,Chromium 45.0.2454 (Ubuntu 0.0.0) LOG: 'handlerUrl invoke'
+
 ]]>
   </system-out>
   <system-err/>

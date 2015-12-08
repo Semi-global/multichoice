@@ -1,65 +1,78 @@
-var invoke = null;
+var multichoiceqc = null;
+
+function initMultiChoiceXBlock(runtime, element) {
+
+    multichoiceqc = new MultichoiceQuestionController(runtime, element);
+
+    multichoiceqc.fetchQuestionsFromServer();
+
+    $('#multichoice-qf-add-alternative').click(function () {
+        multichoiceqc.addAlternative(-1, '', false);
+    });
+
+    $('#multichoice-save-question').click(function () {
+        if (multichoiceqc.validateQuestion())
+            multichoiceqc.saveQuestion();
+
+        return false;
+    });
+
+    $('#multichoice-add-question').click(function () {
+        multichoiceqc.focusQuestion(-1, true);
+    });
+
+    return true;
+}
+
 
 /* Javascript for MultiChoiceXBlock. */
 function MultiChoiceXBlock(runtime, element) {
-
     $(document).ready(function () {
-
-        multichoiceqc = new MultichoiceQuestionController();
-
-        invoke('get_questions', null, function(data) {
-            multichoiceqc.setQuestions(data);
-            multichoiceqc.populateQuestions();
-        });
-
-        $('#multichoice-qf-add-alternative').click(function () {
-            multichoiceqc.addAlternative(-1, '', false);
-        });
-
-        $('#multichoice-save-question').click(function () {
-            if (multichoiceqc.validateQuestion())
-                multichoiceqc.saveQuestion();
-
-            return false;
-        });
-
-        $('#multichoice-add-question').click(function () {
-            multichoiceqc.focusQuestion(-1, true);
-        });
-
-
+        initMultiChoiceXBlock(runtime, element);
     });
-
-    invoke = function (method, data, onSuccess)
-    {
-        var handlerUrl = runtime.handlerUrl(element, method);
-
-        $.ajax({
-            type: "POST",
-            url: handlerUrl,
-            data: JSON.stringify(data),
-            success: onSuccess
-        });
-    }
-
 }
 
-var multichoiceqc = null;
 
-
-var MultichoiceQuestionController = function () {
+var MultichoiceQuestionController = function (runtime, element) {
+    this.runtime = runtime;
+    this.element = element;
 }
 
 MultichoiceQuestionController.prototype.questions = [];
+MultichoiceQuestionController.prototype.runtime = null;
+MultichoiceQuestionController.prototype.element = null;
+
+
+MultichoiceQuestionController.prototype.fetchQuestionsFromServer = function () {
+
+    var that = this;
+    this.invoke('get_questions', null, function(data) {
+        that.setQuestions(data);
+        that.populateQuestions();
+    });
+
+}
+
+MultichoiceQuestionController.prototype.invoke = function (method, data, onSuccess)
+{
+    var handlerUrl = this.runtime.handlerUrl(this.element, method);
+
+    $.ajax({
+        type: "POST",
+        url: handlerUrl,
+        data: JSON.stringify(data),
+        success: onSuccess
+    });
+}
 
 
 MultichoiceQuestionController.prototype.removeQuestion = function (id) {
 
     var that = this;
 
-    invoke('delete_question', {question_id: id}, function(data) {
+    this.invoke('delete_question', {question_id: id}, function(data) {
 
-        if (data == undefined || data.status != 'successful')
+        if (data == null || data == undefined || data.status != 'successful')
         {
             that.setMessage('Could not remove question: ' + data.message, true);
         }
@@ -67,10 +80,10 @@ MultichoiceQuestionController.prototype.removeQuestion = function (id) {
         {
             $('.question > [data-id="' + id + '"').parent().remove();
 
-            for (key in this.questions)
+            for (key in that.questions)
             {
-                if (this.questions[key].id == id)
-                    this.questions.splice(key, 1);
+                if (that.questions[key].id == id)
+                    that.questions.splice(key, 1);
             }
 
             that.focusQuestion(-1, false);
@@ -108,7 +121,7 @@ MultichoiceQuestionController.prototype.focusQuestion = function (id, isNew) {
     {
         $('#multichoice-questionform').hide();
         $('#multichoice-no-questions-added').show();
-        return;
+        return null;
     }
 
     $('#multichoice-questionform').show();
@@ -142,6 +155,7 @@ MultichoiceQuestionController.prototype.focusQuestion = function (id, isNew) {
         $('#multichoice-qf-question').val('');
     }
 
+    return activeQuestion;
 }
 
 
@@ -289,22 +303,22 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
             isCorrect = false;
 
         alternatives.push({
-                id: id,
-                text: alternativeText,
-                isCorrect: isCorrect
-            });
+            id: id,
+            text: alternativeText,
+            isCorrect: isCorrect
+        });
     });
 
     var hasDifficultyLevel = $('#multichoice-difficulty-level').prop('checked');
 
     var question = {
-            id: $('#multichoice-question-id').val(),
-            text: $('#multichoice-qf-question').val(),
-            alternatives: alternatives,
-            hasDifficultyLevel: hasDifficultyLevel
+        id: $('#multichoice-question-id').val(),
+        text: $('#multichoice-qf-question').val(),
+        alternatives: alternatives,
+        hasDifficultyLevel: hasDifficultyLevel
     };
 
-    invoke('save_question', question, function(data) {
+    this.invoke('save_question', question, function(data) {
 
         if (data == undefined || data.status != 'successful')
         {
@@ -314,7 +328,7 @@ MultichoiceQuestionController.prototype.saveQuestion = function () {
         {
             that.setMessage('Question saved', false);
 
-            invoke('get_questions', null, function(data) {
+            that.invoke('get_questions', null, function(data) {
                 multichoiceqc.setQuestions(data);
                 multichoiceqc.populateQuestions();
 

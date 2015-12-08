@@ -6,11 +6,18 @@ var webdriver = require('selenium-webdriver');
 
 module.exports = function(config) {
     config.set({
-        frameworks: ['jasmine'],
+        logLevel: config.LOG_DEBUG,
+        frameworks: ['jasmine-jquery', 'jasmine'],
         files: [
-//            'spec/**/*.js',
-  //          '../jstest/*.js'
-              '../multichoice/static/js/**/*.js'
+              '../../xblock-sdk/workbench/static/workbench/js/vendor/jquery.min.js',
+              '../../xblock-sdk/workbench/static/workbench/js/vendor/jquery.cookie.js',
+              '../../xblock-sdk/workbench/static/workbench/js/vendor/underscore-min.js',
+              '../../xblock-sdk/workbench/static/workbench/js/runtime/1.js',
+              '../../xblock-sdk/workbench/static/workbench/js/runtime/logger.js',
+              '../multichoice/static/js/src/manage_questions.js',
+              '../multichoice/static/js/spec/manage_questions.spec.js'
+              //'../multichoice/static/js/spec/jasmine.js',
+              //'../multichoice/static/js/spec/jasmine-jquery.js',
         ],
         singleRun: true,
         // define browsers
