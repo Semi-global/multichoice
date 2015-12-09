@@ -301,6 +301,8 @@ class MultiChoiceXBlock(XBlock):
         self.student_answers.append(data)
         return_data = {}
         # print data['question_id']
+        print self.questions_json_list
+        # print "Q_ID: " + data['question_id']
         for answer_id in data['chosen']:
             answer_obj = SubmittedAnswer(int(data['question_id']), int(answer_id), data['confidence'])
             self.student_answer_dictionary.append(answer_obj)
@@ -308,7 +310,6 @@ class MultiChoiceXBlock(XBlock):
                 return_data[answer_id] = 'true'
             else:
                 return_data[answer_id] = 'false'
-
         return return_data
 
     def _is_answer_correct(self, answer_id=int, question_id=int):
@@ -321,11 +322,24 @@ class MultiChoiceXBlock(XBlock):
         Returns:
             bool: correctness value for a particular answer.
         """
+        try:
+            for question in self.questions_json_list:
+                print question
+                print "Q_ID: " + str(question['id'])
+                print "PASSED Q_ID: " + str(question_id)
+                if question['id'] == question_id:
+                    print True
+                    for alternative in question['alternatives']:
+                        if alternative['id'] == answer_id:
+                            return alternative['isCorrect']
 
-        for alternative in self.questions_json_list[question_id]['alternatives']:
-            print alternative
-            if alternative['id'] == answer_id:
-                return alternative['isCorrect']
+            # for alternative in self.questions_json_list[question_id]['alternatives']:
+            #     print self.questions_json_list[question_id]['id']
+            #     print alternative
+            #     if alternative['id'] == answer_id:
+            #         return alternative['isCorrect']
+        except Exception as ex:
+            print ex
 
     @XBlock.json_handler
     def get_grade(self, data, suffix=''):
@@ -439,6 +453,7 @@ class MultiChoiceXBlock(XBlock):
         :return: JSON object with status and exception text if caught.
         """
         q_id = int(data['question_id'])
+        print self.questions_json_list
         try:
             for i in range(0, len(self.questions_json_list)):
                 # print self.questions_json_list[i]['id']
@@ -446,6 +461,7 @@ class MultiChoiceXBlock(XBlock):
                 if self.questions_json_list[i]['id'] == q_id:
                     del self.questions_json_list[i]
                     break
+                print self.questions_json_list
             return {'status': 'successful'}
         except Exception as ex:
             return {'status': 'unsuccessful', 'message': str(ex), 'pos': self.questions_json_list[0],
