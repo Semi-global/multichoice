@@ -24,9 +24,8 @@ class test_question(unittest.TestCase):
 
     def test_add_alternative_negative(self):
         self.q.add_alternative("A", "An alternative", True)
-        alternatives = self.q.get_alternatives();
+        alternatives = self.q.get_alternatives()
         assert len(alternatives) == 0
-
 
     def test_is_valid(self):
         self.q.set_question_text("test is best")
