@@ -13,6 +13,7 @@ class Question(object):
     # }
     has_difficulty_level = None
 
+
     def __init__(self, question_id=int,  question=str, difficulty_level=bool):
         self.question_id = question_id
         self.question_text = question

@@ -2,8 +2,7 @@ import unittest
 from xblock.core import XBlock
 from question import Question
 
-class test_xxxxx(unittest.TestCase):
-
+class test_question(unittest.TestCase):
 
     def setUp(self):
         self.q = Question(1, "some text", True)
