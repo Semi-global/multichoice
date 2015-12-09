@@ -10,7 +10,7 @@ sonar.sources=.
 sonar.sourceEncoding=UTF-8
 sonar.language=py
 
-sonar-runner -Dsonar.projectKey=multichoice -Dsonar.projectName=Multichoice -Dsonar.projectVersion=1.0 -Dsonar.sources=. -Dsonar.sourceEncoding=UTF-8 -Dsonar.language=py
+sonar-runner -Dsonar.projectKey=multichoice -Dsonar.projectName=Multichoice -Dsonar.projectVersion=1.0 -Dsonar.sources="./multichoice" -Dsonar.sourceEncoding=UTF-8 -Dsonar.language=py
 
 
 
@@ -26,4 +26,4 @@ sonar.javascript.jstest.reportsPath=tests/reports/junit
 
 
 
-sonar-runner -Dsonar.projectKey=multichoice-js -Dsonar.projectName="Multichoice JS" -Dsonar.projectVersion="1.0" -Dsonar.sources="./multichoice/static/js/src" -Dsonar.sourceEncoding=UTF-8 -Dsonar.language=js -Dsonar.javascript.lcov.reportPath="tests/reports/report-lcov/lcov.info" -Dsonar.javascript.jstest.reportsPath="tests/reports/junit"
+sonar-runner -Dsonar.projectKey=multichoice-js -Dsonar.projectName="Multichoice JS" -Dsonar.projectVersion="1.0" -Dsonar.sources="../multichoice/static/js/src" -Dsonar.sourceEncoding=UTF-8 -Dsonar.language=js -Dsonar.javascript.lcov.reportPath="tests/reports/report-lcov/lcov.info" -Dsonar.javascript.jstest.reportsPath="tests/reports/junit"

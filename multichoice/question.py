@@ -52,7 +52,7 @@ class Question(object):
         self.alternatives.remove(alternative_id)
 
     def is_valid(self):
-        if self.question_id is not int or self.question_id is None:
+        if isinstance(1, int) == False or self.question_id is None:
             return False
         elif self.question_text is "" or self.question_text is None:
             return False

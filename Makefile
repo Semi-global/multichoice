@@ -23,9 +23,9 @@ install:
 
 
 testpy:
-	python manage.py test
+	python manage.py test -s --with-coverage --cover-xml
 coverpy:
-	/srv/sonar-runner/bin/sonar-runner -Dsonar.projectKey=multichoice -Dsonar.projectName=Multichoice -Dsonar.projectVersion=1.0 -Dsonar.sources=. -Dsonar.sourceEncoding=UTF-8 -Dsonar.language=py
+	/srv/sonar-runner/bin/sonar-runner -Dsonar.projectKey=multichoice -Dsonar.projectName=Multichoice -Dsonar.projectVersion=1.0 -Dsonar.sources="./multichoice" -Dsonar.sourceEncoding=UTF-8 -Dsonar.language=py -Dsonar.python.coverage.reportPath=coverage.xml
 
 testjs:
 	./tests/node_modules/.bin/karma start tests/karma.conf.js
