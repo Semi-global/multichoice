@@ -7,6 +7,7 @@ class test_question(unittest.TestCase):
     def setUp(self):
         self.q = Question(1, "some text", True)
 
+
     def test_get_question_id(self):
         id = self.q.get_question_id()
         assert id == 1
