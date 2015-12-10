@@ -7,6 +7,9 @@ class test_question(unittest.TestCase):
     def setUp(self):
         self.q = Question(1, "some text", True)
 
+    def test_get_question_id(self):
+        id = self.q.get_question_id()
+        assert id == 1
 
     def test_set_question_text(self):
         self.q.set_question_text("test is best")
@@ -33,6 +36,31 @@ class test_question(unittest.TestCase):
         self.q.add_alternative(1, "An alternative 2", False)
         valid = self.q.is_valid()
         assert valid == True
+
+    def test_is_valid_id_negative(self):
+        self.q.set_question_id(0)
+        valid = self.q.is_valid()
+        assert valid == False
+
+    def test_is_valid_text_negative(self):
+        self.q.set_question_id(1)
+        self.q.set_question_text("")
+        valid = self.q.is_valid()
+        assert valid == False
+
+    def test_is_valid_difficulty_level_negative(self):
+        self.q.set_question_id(1)
+        self.q.set_question_text("Test question")
+        self.q.set_has_difficulty_level(None)
+        valid = self.q.is_valid()
+        assert valid == False
+
+    def test_is_valid_alternatives_negative(self):
+        self.q.set_question_id(1)
+        self.q.set_question_text("Test question")
+        self.q.set_has_difficulty_level(True)
+        valid = self.q.is_valid()
+        assert valid == False
 
     def test_to_json(self):
         self.q.set_question_text("test is best")

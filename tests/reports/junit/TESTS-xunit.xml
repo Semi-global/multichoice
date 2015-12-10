@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
-<testsuite name="Chromium 45.0.2454 (Ubuntu 0.0.0)" package="" timestamp="2015-12-09T19:41:15" id="0" hostname="ci" tests="10" errors="0" failures="0" time="0.049">
+<testsuite name="Chromium 45.0.2454 (Ubuntu 0.0.0)" package="" timestamp="2015-12-10T08:02:02" id="0" hostname="ci" tests="10" errors="0" failures="0" time="0.049">
   <properties>
     <property name="browser.fullName" value="Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/45.0.2454.101 Chrome/45.0.2454.101 Safari/537.36"/>
   </properties>
   <testcase name="focus question negative - none available" time="0.013" classname="manage_questions"/>
-  <testcase name="fetch and set questions" time="0.014" classname="manage_questions"/>
-  <testcase name="remove question negative" time="0.002" classname="manage_questions"/>
-  <testcase name="remove question positive" time="0.005" classname="manage_questions"/>
-  <testcase name="focus question" time="0.002" classname="manage_questions"/>
+  <testcase name="fetch and set questions" time="0.015" classname="manage_questions"/>
+  <testcase name="remove question negative" time="0.003" classname="manage_questions"/>
+  <testcase name="remove question positive" time="0.004" classname="manage_questions"/>
+  <testcase name="focus question" time="0.003" classname="manage_questions"/>
   <testcase name="focus question negative - find first available" time="0.002" classname="manage_questions"/>
-  <testcase name="focus question - set up new question" time="0.002" classname="manage_questions"/>
+  <testcase name="focus question - set up new question" time="0.001" classname="manage_questions"/>
   <testcase name="save question" time="0.002" classname="manage_questions"/>
-  <testcase name="xblock init" time="0.007" classname="manage_questions"/>
-  <testcase name="validate question" time="0" classname="manage_questions"/>
+  <testcase name="xblock init" time="0.005" classname="manage_questions"/>
+  <testcase name="validate question" time="0.001" classname="manage_questions"/>
   <system-out>
     <![CDATA[Chromium 45.0.2454 (Ubuntu 0.0.0) LOG: 'callFake on mc.invoke: get_questions'
 ,Chromium 45.0.2454 (Ubuntu 0.0.0) LOG: 'callFake on mc.invoke: delete_question'
